@@ -22,7 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${dmSans.variable} antialiased`}>
-        <div className="max-w-fit mx-auto flex flex-col justify-center items-center">
+        <div className="max-w-fit mx-auto px-5 flex flex-col justify-center items-center">
           <Header />
           <StepperComponent />
           {children}

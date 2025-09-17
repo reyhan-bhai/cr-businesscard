@@ -1,3 +1,4 @@
+"use client";
 import {
   Stepper,
   StepperContent,
@@ -13,10 +14,14 @@ import { Check, LoaderCircleIcon } from "lucide-react";
 
 const steps = [{ title: "Parse Card" }, { title: "More Information" }];
 
-export default function Component() {
+interface StepperComponentProps {
+  currentStep: number;
+}
+
+export default function Component({ currentStep }: StepperComponentProps) {
   return (
     <Stepper
-      defaultValue={2}
+      value={currentStep}
       indicators={{
         completed: <Check className="size-4" />,
         loading: <LoaderCircleIcon className="size-4 animate-spin" />,

@@ -1,5 +1,4 @@
 import Header from "@/components/header";
-import StepperComponent from "@/components/stepperComponent";
 import type { Metadata } from "next";
 import { DM_Sans } from "next/font/google";
 import "./globals.css";
@@ -24,7 +23,6 @@ export default function RootLayout({
       <body className={`${dmSans.variable} antialiased`}>
         <div className="max-w-fit mx-auto px-5 flex flex-col justify-center items-center">
           <Header />
-          <StepperComponent />
           {children}
         </div>
       </body>

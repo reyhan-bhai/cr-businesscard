@@ -20,7 +20,7 @@ const Header = () => {
                 className="object-contain"
               />
             </div>
-            <div className="text-neutral-900 text-xl sm:text-2xl lg:text-3xl font-bold font-['DM_Sans'] leading-tight">
+            <div className="text-neutral-900 text-base sm:text-2xl lg:text-3xl font-bold font-['DM_Sans'] leading-tight">
               CRHT Business Card Vault
             </div>
           </div>

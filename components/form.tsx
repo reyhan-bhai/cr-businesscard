@@ -1,3 +1,5 @@
+import Image from "next/image";
+import Button from "./button";
 const CRForm = () => {
   return (
     <div className="self-stretch p-6 mt-4 rounded-xl outline outline-2 outline-offset-[-1px] outline-indigo-50 inline-flex flex-col justify-start items-start gap-6">
@@ -5,14 +7,33 @@ const CRForm = () => {
         <div className="justify-start text-black text-xl font-bold font-['DM_Sans']">
           Parsed Business Card Result
         </div>
-        <div className="self-stretch px-5 py-1 rounded-xl outline outline-1 outline-offset-[-1px] outline-violet-950 flex justify-center items-center gap-2.5 overflow-hidden">
+        <Button
+          title="Edit"
+          color="text-violet-950 "
+          className="outline outline-1 outline-offset-[-1px] outline-violet-950 px-3 py-1 rounded-xl bg-white text-base font-bold font-['DM_Sans']"
+        >
+          <div className="w-6 h-6 relative overflow-hidden">
+            <Image
+              src="/images/square-pen.png"
+              alt="Edit Icon"
+              fill
+              style={{ objectFit: "cover" }}
+            />
+          </div>
+        </Button>
+        {/* <div className="self-stretch px-5 py-1 rounded-xl outline outline-1 outline-offset-[-1px] outline-violet-950 flex justify-center items-center gap-2.5 overflow-hidden">
           <div className="justify-start text-violet-950 text-base font-bold font-['DM_Sans']">
             Edit
           </div>
           <div className="w-6 h-6 relative overflow-hidden">
-            <div className="w-5 h-5 left-[3px] top-[2px] absolute outline outline-2 outline-offset-[-1px] outline-violet-950" />
+            <Image
+              src="/images/square-pen.png"
+              alt="Edit Icon"
+              fill
+              style={{ objectFit: "cover" }}
+            />
           </div>
-        </div>
+        </div> */}
       </div>
       <div className="self-stretch inline-flex justify-start items-start gap-6">
         <div className="flex-1 inline-flex flex-col justify-start items-start gap-1.5">

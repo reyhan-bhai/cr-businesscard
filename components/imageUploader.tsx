@@ -4,31 +4,28 @@ import {
   DropzoneEmptyState,
 } from "@/components/ui/shadcn-io/dropzone";
 import Image from "next/image";
-import { useState } from "react";
 import Button from "./button";
 
-const ImageUploader = () => {
-  const [files, setFiles] = useState<File[] | undefined>();
-  const [filePreview, setFilePreview] = useState<string | undefined>();
+interface ImageUploaderProps {
+  files?: File[];
+  filePreview?: string;
+  onDrop: (files: File[]) => void;
+  onUploadAndParse: () => void;
+  hasFiles?: boolean;
+}
 
-  const handleDrop = (files: File[]) => {
-    console.log(files);
-    setFiles(files);
-    if (files.length > 0) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        if (typeof e.target?.result === "string") {
-          setFilePreview(e.target?.result);
-        }
-      };
-      reader.readAsDataURL(files[0]);
-    }
-  };
+const ImageUploader = ({
+  files,
+  filePreview,
+  onDrop,
+  onUploadAndParse,
+  hasFiles,
+}: ImageUploaderProps) => {
   return (
     <div className="self-stretch p-8 bg-white rounded-xl  outline outline-1 outline-offset-[-1px] outline-stone-300 flex flex-col justify-center items-center gap-6 overflow-hidden">
       <Dropzone
         accept={{ "image/*": [".png", ".jpg", ".jpeg"] }}
-        onDrop={handleDrop}
+        onDrop={onDrop}
         onError={console.error}
         src={files}
         className=" py-12 bg-white rounded-xl flex flex-col justify-center items-center gap-2.5 overflow-hidden border-dashed border-2 border-zinc-300"
@@ -65,7 +62,12 @@ const ImageUploader = () => {
           )}
         </DropzoneContent>
       </Dropzone>
-      <Button title="Upload & Parse"></Button>
+      <Button
+        title="Upload & Parse"
+        onClick={onUploadAndParse}
+        className={hasFiles ? "" : "bg-zinc-500/50 cursor-not-allowed"}
+        disabled={!hasFiles}
+      />
     </div>
   );
 };

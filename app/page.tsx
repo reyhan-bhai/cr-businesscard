@@ -214,6 +214,7 @@ export default function Home() {
                 Your Topic{" "}
               </div>
               <FormField
+                onChange={setYourMessage}
                 className="w-full"
                 placeholder="Type your topic here"
               />
@@ -227,7 +228,7 @@ export default function Home() {
                 Your Message{" "}
               </div>
               <div className="self-stretch h-32 relative bg-white rounded-xl outline outline-[0.50px] outline-offset-[-0.50px] outline-zinc-500/50 overflow-hidden">
-                <FormField textArea={true} placeholder={yourMessage} />
+                <FormField textArea={true} placeholder={yourMessage} onChange={setYourMessage} />
               </div>
             </div>
           </div>

@@ -25,17 +25,17 @@ const ImageUploader = () => {
     }
   };
   return (
-    <div className="self-stretch p-8 bg-white rounded-xl  outline outline-1 outline-offset-[-1px] outline-stone-300 inline-flex flex-col justify-center items-center gap-6 overflow-hidden">
+    <div className="self-stretch p-8 bg-white rounded-xl  outline outline-1 outline-offset-[-1px] outline-stone-300 flex flex-col justify-center items-center gap-6 overflow-hidden">
       <Dropzone
         accept={{ "image/*": [".png", ".jpg", ".jpeg"] }}
         onDrop={handleDrop}
         onError={console.error}
         src={files}
-        className=" py-12 bg-white rounded-xlflex flex-col justify-center items-center gap-2.5 overflow-hidden border-dashed border-2 border-zinc-300"
+        className=" py-12 bg-white rounded-xl flex flex-col justify-center items-center gap-2.5 overflow-hidden border-dashed border-2 border-zinc-300"
       >
         <DropzoneEmptyState>
-          <div className="w-full flex flex-col justify-start items-center gap-2">
-            <div className="self-stretch text-center justify-start">
+          <div className="flex flex-col items-center justify-center">
+            <div className="w-full truncate text-wrap text-center">
               <span className="text-black text-base font-bold font-['DM_Sans']">
                 Drop an image{" "}
               </span>
@@ -47,7 +47,7 @@ const ImageUploader = () => {
                 tap to choose
               </span>
             </div>
-            <div className="self-stretch text-center justify-start text-black text-sm font-normal font-['DM_Sans']">
+            <div className="w-full truncate text-wrap text-center text-black text-sm font-normal font-['DM_Sans']">
               Large images are auto-resized before OCR for speed
             </div>
           </div>

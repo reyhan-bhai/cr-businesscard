@@ -19,7 +19,7 @@ export default function Home() {
       <StepperComponent currentStep={currentStep} />
       <ImageUploader />
       {/* Form after image uploaded */}
-      {/* <CRForm /> */}
+      <CRForm />
       {/* If image not uploaded bg-zinc-500/50 */}
       <Button
         title="Next"

@@ -131,6 +131,7 @@ export default function Home() {
               Remarks/Notes
             </div>
             <FormField
+              onChange={setRemark}
               className="w-full "
               textArea={true}
               placeholder={remark}
@@ -217,7 +218,11 @@ export default function Home() {
                 placeholder="Type your topic here"
               />
             </div>
-            <div className={`self-stretch flex flex-col justify-start items-start gap-3 ${selectedFollowUpType ? "" : "hidden"}`}>
+            <div
+              className={`self-stretch flex flex-col justify-start items-start gap-3 ${
+                selectedFollowUpType ? "" : "hidden"
+              }`}
+            >
               <div className="justify-start text-black text-base font-medium font-['DM_Sans']">
                 Your Message{" "}
               </div>

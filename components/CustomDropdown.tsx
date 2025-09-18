@@ -1,9 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react';
-const CustomDropdown = ({ 
-  options, 
-  placeholder = "Select an option", 
+import { useEffect, useRef, useState } from "react";
+const CustomDropdown = ({
+  options,
+  placeholder = "Select an option",
   onSelect,
-  className = "" 
+  className = "",
 }: {
   options: string[];
   placeholder?: string;
@@ -16,13 +16,16 @@ const CustomDropdown = ({
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const handleSelect = (value: string) => {
@@ -44,13 +47,18 @@ const CustomDropdown = ({
         </span>
         <svg
           className={`w-5 h-5 transition-transform duration-200 ${
-            isOpen ? 'transform rotate-180' : ''
+            isOpen ? "transform rotate-180" : ""
           }`}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
         >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M19 9l-7 7-7-7"
+          />
         </svg>
       </button>
 

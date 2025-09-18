@@ -1,57 +1,8 @@
 import Image from "next/image";
 import { useState } from "react";
 import Button from "./button";
+import FormField from "./formField";
 
-const FormField = ({
-  isDisabled = false,
-  label,
-  value,
-  onChange,
-  fullWidth = false,
-}: {
-  label: string;
-  isDisabled?: boolean;
-  value: string;
-  onChange: (value: string) => void;
-  fullWidth?: boolean;
-}) => {
-  const [isFocused, setIsFocused] = useState(false);
-
-  return (
-    <div
-      className={`${
-        fullWidth ? "w-full flex flex-col" : "flex-1 flex flex-col"
-      } justify-start items-start gap-1.5`}
-    >
-      <div className="justify-start text-black text-sm md:text-base font-medium font-['DM_Sans']">
-        {label}
-      </div>
-      <div
-        className={`w-full px-3 py-3 md:py-3.5 ${
-          isDisabled
-            ? "bg-zinc-100"
-            : isFocused
-            ? "bg-white border-2 border-blue-500 outline-none"
-            : "bg-white"
-        } rounded-xl ${
-          !isDisabled && !isFocused
-            ? "outline outline-[0.50px] outline-offset-[-0.50px] outline-zinc-500/50"
-            : ""
-        } border flex justify-start items-center gap-2.5 overflow-hidden`}
-      >
-        <input
-          type="text"
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
-          disabled={isDisabled}
-          className="flex-1 bg-transparent border-none outline-none text-zinc-600 text-sm md:text-base font-medium font-['DM_Sans'] min-w-0"
-        />
-      </div>
-    </div>
-  );
-};
 
 const FormRow = ({ children }: { children: React.ReactNode }) => (
   <div className="w-full flex flex-col md:flex-row justify-start items-start gap-4 md:gap-6">

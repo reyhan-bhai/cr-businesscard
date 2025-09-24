@@ -1,5 +1,5 @@
 "use client";
-import CardSaveComponent from "@/components/sections/cardSavedComponent";
+import CardSavedComponent from "@/components/sections/cardSavedComponent";
 import MoreInfoSection from "@/components/sections/moreInfoSection";
 import ParseCardSection from "@/components/sections/parseCardSection";
 import StepperComponent from "@/components/stepperComponent";
@@ -68,7 +68,7 @@ export default function Home() {
         handleNextClick={handleNextClick}
       />
 
-      <CardSaveComponent currentStep={currentStep} />
+      <CardSavedComponent currentStep={currentStep} />
     </>
   );
 }

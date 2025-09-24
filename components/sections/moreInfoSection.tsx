@@ -1,8 +1,9 @@
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useState } from "react";
-import FormField from "../formField";
 import Button from "../button";
 import CustomDropdown from "../CustomDropdown";
-
+import FormField from "../formField";
 interface MoreInfoSectionProps {
   currentStep: number;
   setCurrentStep: (step: number) => void;
@@ -97,6 +98,17 @@ const MoreInfoSection: React.FC<MoreInfoSectionProps> = ({
               </label>
             </div>
           </div>
+
+          {/* <RadioGroup className="flex flex-col" defaultValue="option-one">
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="option-one" id="option-one" />
+              <Label htmlFor="option-one">Option One</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="option-two" id="option-two" />
+              <Label htmlFor="option-two">Option Two</Label>
+            </div>
+          </RadioGroup> */}
 
           <div
             className={`follow-up-page w-full flex flex-col gap-y-4 ${

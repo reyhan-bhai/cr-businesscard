@@ -4,7 +4,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Copy, Download, FileImage, Loader2, Upload } from "lucide-react";
+import {
+  Copy,
+  Download,
+  FileImage,
+  Loader2,
+  Upload,
+  Wand2,
+} from "lucide-react";
 import Image from "next/image";
 import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
@@ -14,72 +21,110 @@ interface OCRResult {
   confidence: number;
   words: {
     text: string;
-    confidence: number;
-    boundingBox: {
-      x: number;
-      y: number;
-      width: number;
-      height: number;
-    };
   }[];
+}
+
+interface StudentInfo {
+  id: string;
+  name: string;
+  major: string;
+  university: string;
+  status?: string;
+  campus?: string;
 }
 
 const Page = () => {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [extractedText, setExtractedText] = useState<string>("");
   const [ocrResult, setOcrResult] = useState<OCRResult | null>(null);
+  const [studentInfo, setStudentInfo] = useState<StudentInfo | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isProcessingAI, setIsProcessingAI] = useState(false);
   const [error, setError] = useState<string>("");
   const [fileName, setFileName] = useState<string>("");
 
-  const onDrop = useCallback(async (acceptedFiles: File[]) => {
-    const file = acceptedFiles[0];
-    if (file) {
-      setFileName(file.name);
-      setError("");
-
-      // Create preview URL
-      const reader = new FileReader();
-      reader.onload = () => {
-        setUploadedImage(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-
-      // Process OCR
-      await processOCR(file);
-    }
-  }, []);
-
-  const processOCR = async (file: File) => {
-    setIsProcessing(true);
-    setError("");
+  const processWithAI = useCallback(async (text: string) => {
+    setIsProcessingAI(true);
 
     try {
-      const formData = new FormData();
-      formData.append("image", file);
-
-      const response = await fetch("/api/ocr", {
+      const response = await fetch("/api/ai/extract-student", {
         method: "POST",
-        body: formData,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ extractedText: text }),
       });
 
       const result = await response.json();
-
+      console.log("AI processing result:", result);
       if (result.success) {
-        setOcrResult(result.data);
-        setExtractedText(result.data.fullText);
+        setStudentInfo(result.data);
       } else {
-        setError(result.error || "Failed to extract text");
+        console.error("AI processing failed:", result.error);
+        // Don't show error to user, just log it
       }
     } catch (err) {
-      setError(
-        "Error processing image: " +
-          (err instanceof Error ? err.message : "Unknown error")
-      );
+      console.error("Error processing with AI:", err);
+      // Don't show error to user, just log it
     } finally {
-      setIsProcessing(false);
+      setIsProcessingAI(false);
     }
-  };
+  }, []);
+
+  const processOCR = useCallback(
+    async (file: File) => {
+      setIsProcessing(true);
+      setError("");
+
+      try {
+        const formData = new FormData();
+        formData.append("image", file);
+
+        const response = await fetch("/api/ocr", {
+          method: "POST",
+          body: formData,
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          setOcrResult(result.data);
+          setExtractedText(result.data.fullText);
+
+          // Process with AI to extract student info
+          await processWithAI(result.data.fullText);
+        } else {
+          setError(result.error || "Failed to extract text");
+        }
+      } catch (err) {
+        setError(
+          "Error processing image: " +
+            (err instanceof Error ? err.message : "Unknown error")
+        );
+      } finally {
+        setIsProcessing(false);
+      }
+    },
+    [processWithAI]
+  );
+
+  const onDrop = useCallback(
+    async (acceptedFiles: File[]) => {
+      const file = acceptedFiles[0];
+      if (file) {
+        setFileName(file.name);
+        setError("");
+        const reader = new FileReader();
+        reader.onload = () => {
+          setUploadedImage(reader.result as string);
+        };
+        reader.readAsDataURL(file);
+
+        await processOCR(file);
+      }
+    },
+    [processOCR]
+  );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -113,6 +158,7 @@ const Page = () => {
     setUploadedImage(null);
     setExtractedText("");
     setOcrResult(null);
+    setStudentInfo(null);
     setError("");
     setFileName("");
   };
@@ -203,7 +249,17 @@ const Page = () => {
               <span>Extracted Text</span>
               {extractedText && (
                 <div className="flex gap-2">
-                  <Button
+                  {/* <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => processWithAI(extractedText)}
+                    disabled={isProcessingAI}
+                    className="flex items-center gap-1"
+                  >
+                    <Wand2 className="h-4 w-4" />
+                    {isProcessingAI ? "Processing..." : "Process with AI"}
+                  </Button> */}
+                  {/* <Button
                     variant="outline"
                     size="sm"
                     onClick={copyToClipboard}
@@ -220,7 +276,7 @@ const Page = () => {
                   >
                     <Download className="h-4 w-4" />
                     Download
-                  </Button>
+                  </Button> */}
                 </div>
               )}
             </CardTitle>
@@ -271,22 +327,122 @@ const Page = () => {
         </Card>
       </div>
 
-      {/* Word Details Section */}
-      {ocrResult && ocrResult.words.length > 0 && (
+      {/* Student Information Form */}
+      {extractedText && (
         <Card className="mt-6">
           <CardHeader>
-            <CardTitle>Word Details</CardTitle>
+            <CardTitle className="flex items-center justify-between">
+              <span>Student Information</span>
+              {isProcessingAI && (
+                <div className="flex items-center gap-2 text-blue-600">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <span className="text-sm">Processing with AI...</span>
+                </div>
+              )}
+            </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 max-h-60 overflow-y-auto">
-              {ocrResult.words.map((word, index) => (
-                <div key={index} className="p-2 border rounded text-sm">
-                  <div className="font-medium truncate">{word.text}</div>
-                  <div className="text-xs text-gray-500">
-                    {/* Confidence: {(word.confidence * 100).toFixed(1)}% */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <div>
+                  <Label
+                    htmlFor="student-id"
+                    className="text-sm font-medium text-gray-700"
+                  >
+                    Student ID
+                  </Label>
+                  <div className="mt-1 p-3 border rounded-md bg-gray-50">
+                    <span className="text-gray-900">
+                      {studentInfo?.id || "Not detected"}
+                    </span>
                   </div>
                 </div>
-              ))}
+
+                <div>
+                  <Label
+                    htmlFor="student-name"
+                    className="text-sm font-medium text-gray-700"
+                  >
+                    Name
+                  </Label>
+                  <div className="mt-1 p-3 border rounded-md bg-gray-50">
+                    <span className="text-gray-900">
+                      {studentInfo?.name || "Not detected"}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <Label
+                    htmlFor="student-major"
+                    className="text-sm font-medium text-gray-700"
+                  >
+                    Major
+                  </Label>
+                  <div className="mt-1 p-3 border rounded-md bg-gray-50">
+                    <span className="text-gray-900">
+                      {studentInfo?.major || "Not detected"}
+                    </span>
+                  </div>
+                </div>
+
+                <div>
+                  <Label
+                    htmlFor="student-university"
+                    className="text-sm font-medium text-gray-700"
+                  >
+                    University
+                  </Label>
+                  <div className="mt-1 p-3 border rounded-md bg-gray-50">
+                    <span className="text-gray-900">
+                      {studentInfo?.university || "Not detected"}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Additional Information */}
+              {(studentInfo?.status || studentInfo?.campus) && (
+                <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t">
+                  {studentInfo?.status && (
+                    <div>
+                      <Label className="text-sm font-medium text-gray-700">
+                        Status
+                      </Label>
+                      <div className="mt-1 p-3 border rounded-md bg-gray-50">
+                        <span className="text-gray-900">
+                          {studentInfo.status}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                  {studentInfo?.campus && (
+                    <div>
+                      <Label className="text-sm font-medium text-gray-700">
+                        Campus
+                      </Label>
+                      <div className="mt-1 p-3 border rounded-md bg-gray-50">
+                        <span className="text-gray-900">
+                          {studentInfo.campus}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Debug Information */}
+              {!studentInfo && !isProcessingAI && extractedText && (
+                <div className="md:col-span-2 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                  <p className="text-yellow-700 text-sm">
+                    <span className="font-medium">AI Processing:</span> No
+                    structured data extracted yet. Make sure the image contains
+                    student information like ID, name, major, and university.
+                  </p>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>

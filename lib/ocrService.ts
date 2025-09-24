@@ -1,6 +1,6 @@
 import { ImageAnnotatorClient } from "@google-cloud/vision";
-import path from "path";
 import fs from "fs";
+import path from "path";
 
 export interface OCRResult {
   fullText: string;
@@ -22,26 +22,37 @@ export class OCRService {
 
   constructor() {
     try {
-      console.log('Initializing Google Cloud Vision client...');
-      
+      console.log("Initializing Google Cloud Vision client...");
+
       // Use the service account key file directly
-      const keyFilePath = path.join(process.cwd(), "services", "vision_key.json");
-      console.log('Looking for credentials at:', keyFilePath);
-      
+      const keyFilePath = path.join(
+        process.cwd(),
+        "services",
+        "vision_key.json"
+      );
+      console.log("Looking for credentials at:", keyFilePath);
+
       if (!fs.existsSync(keyFilePath)) {
-        throw new Error(`Vision API key file not found at: ${keyFilePath}. Please ensure vision_key.json exists in the services/ directory.`);
+        throw new Error(
+          `Vision API key file not found at: ${keyFilePath}. Please ensure vision_key.json exists in the services/ directory.`
+        );
       }
 
       // Initialize client with keyFilename (this is the most reliable method)
       this.client = new ImageAnnotatorClient({
         keyFilename: keyFilePath,
       });
-      
-      console.log('Google Cloud Vision client initialized successfully with key file');
-      
+
+      console.log(
+        "Google Cloud Vision client initialized successfully with key file"
+      );
     } catch (error) {
-      console.error('Error initializing Google Cloud Vision client:', error);
-      throw new Error(`Failed to initialize Vision API client: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      console.error("Error initializing Google Cloud Vision client:", error);
+      throw new Error(
+        `Failed to initialize Vision API client: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`
+      );
     }
   }
 

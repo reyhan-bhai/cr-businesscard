@@ -184,7 +184,7 @@ const MoreInfoSection: React.FC<MoreInfoSectionProps> = ({
           <Button
             title="Email"
             color="bg-[#518FED]"
-            className="w-full  text-white"
+            className={`w-full  text-white ${selectedFollowUp === "yes" ? "" : "hidden"}`}
             onClick={() => {
               /* Handle Email Action 
                  Direct to email app with prefilled content (About to be implemented)

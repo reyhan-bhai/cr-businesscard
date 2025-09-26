@@ -70,7 +70,7 @@ const CustomDropdown = ({
               key={index}
               type="button"
               onClick={() => handleSelect(option)}
-              className="w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-50 first:rounded-t-lg last:rounded-b-lg"
+              className="w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-300 focus:outline-none focus:bg-gray-50 first:rounded-t-lg last:rounded-b-lg"
             >
               {option}
             </button>

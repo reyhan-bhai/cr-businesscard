@@ -1,5 +1,3 @@
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useState } from "react";
 import Button from "../button";
 import CustomDropdown from "../CustomDropdown";
@@ -26,7 +24,12 @@ const MoreInfoSection: React.FC<MoreInfoSectionProps> = ({
   const [selectedFollowUp, setSelectedFollowUp] = useState("yes");
   const [selectedFollowUpType, setSelectedFollowUpType] = useState("");
 
-  const followUpOptions = ["CR Rating Information", "Others"];
+  const followUpOptions = [
+    "Thank You",
+    "CR Rating Information",
+    "More Discussion",
+    "Others",
+  ];
   return (
     <>
       <section
@@ -56,7 +59,7 @@ const MoreInfoSection: React.FC<MoreInfoSectionProps> = ({
             />
           </div>
           <div className="self-stretch flex flex-col justify-start items-start gap-3">
-            <div className="justify-start text-black text-base font-medium font-['DM_Sans']">
+            <div className="justify-start text-black text-base font-bold font-['DM_Sans']">
               Remarks/Notes
             </div>
             <FormField
@@ -144,12 +147,12 @@ const MoreInfoSection: React.FC<MoreInfoSectionProps> = ({
               }`}
             >
               <div className="justify-start text-black text-base font-medium font-['DM_Sans']">
-                Your Topic{" "}
+                Email Subject{" "}
               </div>
               <FormField
                 onChange={setYourMessage}
                 className="w-full"
-                placeholder="Type your topic here"
+                placeholder="Type Email Subject here"
               />
             </div>
             <div
@@ -158,7 +161,7 @@ const MoreInfoSection: React.FC<MoreInfoSectionProps> = ({
               }`}
             >
               <div className="justify-start text-black text-base font-medium font-['DM_Sans']">
-                Your Message{" "}
+                Email Message{" "}
               </div>
               <div className="self-stretch h-32 relative bg-white rounded-xl outline outline-[0.50px] outline-offset-[-0.50px] outline-zinc-500/50 overflow-hidden">
                 <FormField
@@ -171,7 +174,7 @@ const MoreInfoSection: React.FC<MoreInfoSectionProps> = ({
           </div>
         </div>
 
-        <div className="flex md:flex-row flex-col w-full gap-x-3 gap-y-3 mt-5">
+        <div className="flex md:flex-row flex-col w-full gap-x-3 gap-y-3 mt-5 mb-12">
           <Button
             title="Back"
             color="bg-white-500"
@@ -179,10 +182,24 @@ const MoreInfoSection: React.FC<MoreInfoSectionProps> = ({
             onClick={() => setCurrentStep(1)}
           />
           <Button
+            title="Email"
+            color="bg-[#518FED]"
+            className="w-full  text-white"
+            onClick={() => {
+              /* Handle Email Action 
+                 Direct to email app with prefilled content (About to be implemented)
+              */
+            }}
+          />
+          <Button
             title="Next"
             color="bg-[#007D49]"
             className="w-full  text-white"
-            onClick={handleNextClick}
+            onClick={() => {
+              /* Handle Next Action */
+              {handleNextClick()}
+              // Append to spreadsheet (About to be implemented)
+            }}
           />
         </div>
       </section>

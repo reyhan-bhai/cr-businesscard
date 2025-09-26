@@ -38,7 +38,7 @@ const FormField = ({
           <div
             className={`w-full px-3 py-3 md:py-2 ${
               isDisabled
-                ? "bg-zinc-100"
+                ? "bg-zinc-200"
                 : isFocused
                 ? "bg-white border-2 border-blue-500 outline-none"
                 : "bg-white"

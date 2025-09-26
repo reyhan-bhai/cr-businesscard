@@ -12,6 +12,7 @@ interface ImageUploaderProps {
   onDrop: (files: File[]) => void;
   onUploadAndParse: () => void;
   hasFiles?: boolean;
+  isProcessing?: boolean;
 }
 
 const ImageUploader = ({
@@ -20,6 +21,7 @@ const ImageUploader = ({
   onDrop,
   onUploadAndParse,
   hasFiles,
+  isProcessing,
 }: ImageUploaderProps) => {
   return (
     <div className="self-stretch p-8 bg-white rounded-xl  outline outline-1 outline-offset-[-1px] outline-stone-300 flex flex-col justify-center items-center gap-6 overflow-hidden">
@@ -63,10 +65,12 @@ const ImageUploader = ({
         </DropzoneContent>
       </Dropzone>
       <Button
-        title="Upload & Parse"
+        title={isProcessing ? "Processing..." : "Upload & Parse"}
         onClick={onUploadAndParse}
-        className={hasFiles ? "" : "bg-zinc-500/50 cursor-not-allowed"}
-        disabled={!hasFiles}
+        className={
+          hasFiles && !isProcessing ? "" : "bg-zinc-500/50 cursor-not-allowed"
+        }
+        disabled={!hasFiles || isProcessing}
       />
     </div>
   );

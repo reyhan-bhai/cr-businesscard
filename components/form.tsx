@@ -1,8 +1,17 @@
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "./button";
 import FormField from "./formField";
 
+interface BusinessCardData {
+  full_name: string;
+  job_title: string;
+  company: string;
+  email: string;
+  phone: string;
+  website: string;
+  address: string;
+}
 
 const FormRow = ({ children }: { children: React.ReactNode }) => (
   <div className="w-full flex flex-col md:flex-row justify-start items-start gap-4 md:gap-6">
@@ -10,9 +19,11 @@ const FormRow = ({ children }: { children: React.ReactNode }) => (
   </div>
 );
 
+interface CRFormProps {
+  extractedData?: BusinessCardData;
+}
 
-
-const CRForm = () => {
+const CRForm = ({ extractedData }: CRFormProps) => {
   const [fullName, setFullName] = useState("");
   const [jobTitle, setJobTitle] = useState("");
   const [company, setCompany] = useState("");
@@ -21,6 +32,18 @@ const CRForm = () => {
   const [website, setWebsite] = useState("");
   const [address, setAddress] = useState("");
   const [isEditing, setIsEditing] = useState(false);
+
+  useEffect(() => {
+    if (extractedData) {
+      setFullName(extractedData.full_name || "");
+      setJobTitle(extractedData.job_title || "");
+      setCompany(extractedData.company || "");
+      setEmail(extractedData.email || "");
+      setPhone(extractedData.phone || "");
+      setWebsite(extractedData.website || "");
+      setAddress(extractedData.address || "");
+    }
+  }, [extractedData]);
   const handleEdit = () => {
     setIsEditing(true);
   };

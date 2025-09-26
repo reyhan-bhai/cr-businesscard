@@ -13,12 +13,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const businessCardInfo = await aiService.extractBusinessCardInfo(extractedText);
+    const businessCardInfo = await aiService.extractBusinessCardInfo(
+      extractedText
+    );
 
     return NextResponse.json({
       success: true,
       data: businessCardInfo,
-      message: "Student information extracted successfully",
+      message: "Business card information extracted successfully",
     });
   } catch (error) {
     console.error("AI Processing Error:", error);

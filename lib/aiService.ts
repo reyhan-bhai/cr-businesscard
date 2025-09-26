@@ -1,6 +1,6 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const API_KEY = "AIzaSyBSj2Pjpl3ALEbCinbs_YkG5JSZ9mINvVQ";
+const API_KEY = process.env.LLM_API || "";
 
 export interface BusinessCardInfo {
   full_name: string;

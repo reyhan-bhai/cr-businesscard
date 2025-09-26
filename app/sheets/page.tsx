@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 export default function Page() {
 
   const handleOnGetSheetDataClick = async () => {
-    const response = await getSheetData();
+    const response = await getFileMetadata();
     console.log(response)
   };
 

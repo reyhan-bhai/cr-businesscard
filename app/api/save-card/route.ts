@@ -12,15 +12,15 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "No image provided" }, { status: 400 });
     }
 
-    // const fileBuffer = Buffer.from(await image.arrayBuffer());
-    // const imageUrl = await uploadFile(image.name, fileBuffer, image.type);
+    const fileBuffer = Buffer.from(await image.arrayBuffer());
+    const imageUrl = await uploadFile(image.name, fileBuffer, image.type);
 
-    // if (!imageUrl) {
-    //   return NextResponse.json(
-    //     { error: "Failed to upload image to Google Drive" },
-    //     { status: 500 }
-    //   );
-    // }
+    if (!imageUrl) {
+      return NextResponse.json(
+        { error: "Failed to upload image to Google Drive" },
+        { status: 500 }
+      );
+    }
 
     const timestamp = new Date().toISOString();
     const sheetData = [
@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
       data.whoMet,
       data.whereMet,
       data.remarks,
-    //   imageUrl,
+      imageUrl,
     ];
 
     await appendToSheet(sheetData);

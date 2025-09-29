@@ -17,7 +17,7 @@ interface BusinessCardData {
 
 export default function Home() {
   // Parse Card Section
-  const [currentStep, setCurrentStep] = useState(2);
+  const [currentStep, setCurrentStep] = useState(1);
   const [files, setFiles] = useState<File[] | undefined>();
   const [filePreview, setFilePreview] = useState<string | undefined>();
   const [isImageParsed, setIsImageParsed] = useState(false);

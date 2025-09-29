@@ -2,7 +2,7 @@
 import { JWT } from "google-auth-library";
 import { google } from "googleapis";
 
-const GOOGLE_DRIVE_ID = "1RBYxSG1CdPtwncUrwNoUYcZojyEcHBJe";
+const GOOGLE_DRIVE_ID = "1CZ5MKE_achtid81p6MxI2wLNmBue4uGG";
 
 // Initialize JWT client
 const jwtClient = new JWT({
@@ -27,6 +27,26 @@ export async function authenticateGoogleDrive(): Promise<void> {
   }
 }
 
+/**
+ * Get file metadata from Google Drive
+ */
+export async function getFileMetadata(fileId: string = GOOGLE_DRIVE_ID) {
+  try {
+    await authenticateGoogleDrive();
+
+    const response = await drive.files.get({
+      fileId: fileId,
+      fields:
+        "id, name, mimeType, size, createdTime, modifiedTime, webViewLink, webContentLink",
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error getting file metadata:", error);
+    throw error;
+  }
+}
+ 
 import { Readable } from "stream";
 
 /**
@@ -68,6 +88,7 @@ export async function uploadFile(
         role: "reader",
         type: "anyone",
       },
+      supportsAllDrives: true,
     });
 
     return file.data.webViewLink;

@@ -1,10 +1,14 @@
-import Button from "../button";
+"use client";
 import Image from "next/image";
-
+import { useRouter } from "next/navigation";
+import Button from "../button";
 interface CardSaveComponentProps {
   currentStep: number;
 }
-const CardSaveComponent: React.FC<CardSaveComponentProps> = ({ currentStep }) => {
+const CardSaveComponent: React.FC<CardSaveComponentProps> = ({
+  currentStep,
+}) => {
+  const router = useRouter();
   return (
     <>
       <section
@@ -36,7 +40,7 @@ const CardSaveComponent: React.FC<CardSaveComponentProps> = ({ currentStep }) =>
               title="Upload Another Card"
               color="bg-white-500"
               className="w-full text-black border border-gray-500"
-              // onClick={() => setCurrentStep(1)}
+              onClick={() => router.push("/")}
             />
           </div>
         </div>

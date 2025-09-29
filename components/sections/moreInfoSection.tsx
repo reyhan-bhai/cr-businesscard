@@ -3,6 +3,15 @@ import Button from "../button";
 import CustomDropdown from "../CustomDropdown";
 import FormField from "../formField";
 
+interface BusinessCardData {
+  full_name: string;
+  job_title: string;
+  company: string;
+  email: string;
+  phone: string;
+  website: string;
+  address: string;
+}
 interface MoreInfoSectionProps {
   currentStep: number;
   setCurrentStep: (step: number) => void;
@@ -20,6 +29,9 @@ interface MoreInfoSectionProps {
   selectedFollowUpType: string;
   setSelectedFollowUpType: Dispatch<SetStateAction<string>>;
   isAppending: boolean;
+  extractedData?: BusinessCardData;
+  emailSubject: string;
+  setEmailSubject: Dispatch<SetStateAction<string>>;
 }
 
 const MoreInfoSection: React.FC<MoreInfoSectionProps> = ({
@@ -39,6 +51,9 @@ const MoreInfoSection: React.FC<MoreInfoSectionProps> = ({
   selectedFollowUpType,
   setSelectedFollowUpType,
   isAppending,
+  extractedData,
+  emailSubject,
+  setEmailSubject,
 }) => {
   const followUpOptions = [
     "Thank You",
@@ -46,6 +61,19 @@ const MoreInfoSection: React.FC<MoreInfoSectionProps> = ({
     "More Discussion",
     "Others",
   ];
+  const handleEmail = () => {
+    if (extractedData?.email) {
+      const subject = encodeURIComponent(
+        selectedFollowUpType === "Others"
+          ? emailSubject
+          : selectedFollowUpType
+      );
+      const body = encodeURIComponent(yourMessage);
+      window.location.href = `mailto:${extractedData.email}?subject=${subject}&body=${body}`;
+    } else {
+      alert("No email address found for this contact.");
+    }
+  };
   return (
     <>
       <section
@@ -169,8 +197,8 @@ const MoreInfoSection: React.FC<MoreInfoSectionProps> = ({
                 Email Subject{" "}
               </div>
               <FormField
-                onChange={setYourMessage}
-                value={yourMessage}
+                onChange={setEmailSubject}
+                value={emailSubject}
                 className="w-full"
                 placeholder="Type Email Subject here"
               />
@@ -208,11 +236,7 @@ const MoreInfoSection: React.FC<MoreInfoSectionProps> = ({
             className={`w-full  text-white ${
               selectedFollowUp === "yes" ? "" : "hidden"
             }`}
-            onClick={() => {
-              /* Handle Email Action 
-                 Direct to email app with prefilled content (About to be implemented)
-              */
-            }}
+            onClick={handleEmail}
           />
           <Button
             title={isAppending ? "Appending..." : "Next"}

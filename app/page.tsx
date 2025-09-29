@@ -17,7 +17,7 @@ interface BusinessCardData {
 
 export default function Home() {
   // Parse Card Section
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(2);
   const [files, setFiles] = useState<File[] | undefined>();
   const [filePreview, setFilePreview] = useState<string | undefined>();
   const [isImageParsed, setIsImageParsed] = useState(false);
@@ -25,6 +25,7 @@ export default function Home() {
     BusinessCardData | undefined
   >();
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   // Parse Card Section End
 
   // More Info Section
@@ -34,6 +35,7 @@ export default function Home() {
   const [yourMessage, setYourMessage] = useState("");
   const [selectedFollowUp, setSelectedFollowUp] = useState("yes");
   const [selectedFollowUpType, setSelectedFollowUpType] = useState("");
+  const [emailSubject, setEmailSubject] = useState("");
   const [isAppending, setIsAppending] = useState(false);
   // More Info Section End
 
@@ -175,6 +177,8 @@ export default function Home() {
         setExtractedData={setExtractedData}
         onDrop={handleImageDrop}
         onUploadAndParse={handleUploadAndParse}
+        isEditing={isEditing}
+        setIsEditing={setIsEditing}
       />
 
       <MoreInfoSection
@@ -194,6 +198,9 @@ export default function Home() {
         selectedFollowUpType={selectedFollowUpType}
         setSelectedFollowUpType={setSelectedFollowUpType}
         isAppending={isAppending}
+        extractedData={extractedData}
+        emailSubject={emailSubject}
+        setEmailSubject={setEmailSubject}
       />
 
       <CardSavedComponent currentStep={currentStep} />

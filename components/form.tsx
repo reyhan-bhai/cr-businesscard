@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { useState } from "react";
 import Button from "./button";
 import FormField from "./formField";
 
@@ -22,11 +21,16 @@ const FormRow = ({ children }: { children: React.ReactNode }) => (
 interface CRFormProps {
   extractedData?: BusinessCardData;
   setExtractedData: (data: BusinessCardData) => void;
+  isEditing: boolean;
+  setIsEditing: (isEditing: boolean) => void;
 }
 
-const CRForm = ({ extractedData, setExtractedData }: CRFormProps) => {
-  const [isEditing, setIsEditing] = useState(false);
-
+const CRForm = ({
+  extractedData,
+  setExtractedData,
+  isEditing,
+  setIsEditing,
+}: CRFormProps) => {
   const handleFieldChange = (field: keyof BusinessCardData, value: string) => {
     if (setExtractedData && extractedData) {
       setExtractedData({ ...extractedData, [field]: value });

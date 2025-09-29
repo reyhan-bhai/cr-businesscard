@@ -23,6 +23,8 @@ interface ParseCardSectionProps {
   setExtractedData: (data: BusinessCardData) => void;
   onDrop: (droppedFiles: File[]) => void;
   onUploadAndParse: () => void;
+  isEditing: boolean;
+  setIsEditing: (isEditing: boolean) => void;
 }
 
 const ParseCardSection = ({
@@ -36,7 +38,16 @@ const ParseCardSection = ({
   setExtractedData,
   onDrop,
   onUploadAndParse,
+  isEditing,
+  setIsEditing,
 }: ParseCardSectionProps) => {
+  const handleNext = () => {
+    if (isEditing) {
+      alert("Please save your changes first.");
+    } else {
+      handleNextClick();
+    }
+  };
   return (
     <section
       className={`${currentStep === 1 ? "" : "hidden"} parse-card-page w-full`}
@@ -53,16 +64,18 @@ const ParseCardSection = ({
         <CRForm
           extractedData={extractedData}
           setExtractedData={setExtractedData}
+          isEditing={isEditing}
+          setIsEditing={setIsEditing}
         />
       )}
       <Button
         title="Next"
-        color={!isImageParsed ? "bg-zinc-500/50" : "bg-[#007D49]"}
+        color={!isImageParsed || isEditing ? "bg-zinc-500/50" : "bg-[#007D49]"}
         className={`w-full mt-5 mb-12 text-white ${
-          !isImageParsed ? "cursor-not-allowed " : ""
+          !isImageParsed || isEditing ? "cursor-not-allowed " : ""
         }`}
-        disabled={!isImageParsed}
-        onClick={handleNextClick}
+        disabled={!isImageParsed || isEditing}
+        onClick={handleNext}
       />
     </section>
   );

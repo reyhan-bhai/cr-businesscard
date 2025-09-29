@@ -17,7 +17,7 @@ interface BusinessCardData {
 
 export default function Home() {
   // Parse Card Section
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(2);
   const [files, setFiles] = useState<File[] | undefined>();
   const [filePreview, setFilePreview] = useState<string | undefined>();
   const [isImageParsed, setIsImageParsed] = useState(false);
@@ -27,13 +27,66 @@ export default function Home() {
   const [isProcessing, setIsProcessing] = useState(false);
   // Parse Card Section End
 
+  // More Info Section
+  const [whoMet, setWhoMet] = useState("");
+  const [whereMet, setWhereMet] = useState("");
+  const [remarks, setRemarks] = useState("");
+  const [yourMessage, setYourMessage] = useState("");
+  const [selectedFollowUp, setSelectedFollowUp] = useState("yes");
+  const [selectedFollowUpType, setSelectedFollowUpType] = useState("");
+  // More Info Section End
+
+  const handleSaveCard = async () => {
+    if (!files || files.length === 0 || !extractedData) {
+      alert("Please parse a business card first.");
+      return;
+    }
+
+    const allData = {
+      ...extractedData,
+      whoMet,
+      whereMet,
+      remarks,
+    };
+
+    const formData = new FormData();
+    formData.append("image", files[0]);
+    formData.append("data", JSON.stringify(allData));
+
+    try {
+      setIsProcessing(true);
+      const response = await fetch("/api/save-card", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to save card data");
+      }
+
+      const result = await response.json();
+      console.log(result.message);
+      setCurrentStep((prev) => prev + 1);
+      window.scrollTo({ top: 0 });
+    } catch (error) {
+      console.error("Error saving card:", error);
+      alert("Failed to save card. Please try again.");
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
   const handleNextClick = () => {
     if (isImageParsed) {
       console.log("Next button clicked");
-      setCurrentStep((prev) => prev + 1);
-      console.log("Moving to step:", currentStep + 1);
-      // Scroll to the top
-      window.scrollTo({ top: 0 });
+      if (currentStep === 2) {
+        handleSaveCard();
+      } else {
+        setCurrentStep((prev) => prev + 1);
+        console.log("Moving to step:", currentStep + 1);
+        // Scroll to the top
+        window.scrollTo({ top: 0 });
+      }
     }
   };
 
@@ -126,6 +179,18 @@ export default function Home() {
         currentStep={currentStep}
         setCurrentStep={setCurrentStep}
         handleNextClick={handleNextClick}
+        whoMet={whoMet}
+        setWhoMet={setWhoMet}
+        whereMet={whereMet}
+        setWhereMet={setWhereMet}
+        remarks={remarks}
+        setRemarks={setRemarks}
+        yourMessage={yourMessage}
+        setYourMessage={setYourMessage}
+        selectedFollowUp={selectedFollowUp}
+        setSelectedFollowUp={setSelectedFollowUp}
+        selectedFollowUpType={selectedFollowUpType}
+        setSelectedFollowUpType={setSelectedFollowUpType}
       />
 
       <CardSavedComponent currentStep={currentStep} />

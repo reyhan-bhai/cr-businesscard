@@ -1,29 +1,43 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 import Button from "../button";
 import CustomDropdown from "../CustomDropdown";
 import FormField from "../formField";
+
 interface MoreInfoSectionProps {
   currentStep: number;
   setCurrentStep: (step: number) => void;
   handleNextClick: () => void;
+  whoMet: string;
+  setWhoMet: Dispatch<SetStateAction<string>>;
+  whereMet: string;
+  setWhereMet: Dispatch<SetStateAction<string>>;
+  remarks: string;
+  setRemarks: Dispatch<SetStateAction<string>>;
+  yourMessage: string;
+  setYourMessage: Dispatch<SetStateAction<string>>;
+  selectedFollowUp: string;
+  setSelectedFollowUp: Dispatch<SetStateAction<string>>;
+  selectedFollowUpType: string;
+  setSelectedFollowUpType: Dispatch<SetStateAction<string>>;
 }
 
 const MoreInfoSection: React.FC<MoreInfoSectionProps> = ({
   currentStep,
   setCurrentStep,
   handleNextClick,
+  whoMet,
+  setWhoMet,
+  whereMet,
+  setWhereMet,
+  remarks,
+  setRemarks,
+  yourMessage,
+  setYourMessage,
+  selectedFollowUp,
+  setSelectedFollowUp,
+  selectedFollowUpType,
+  setSelectedFollowUpType,
 }) => {
-  const [fullName, setFullName] = useState("eg. John Doe");
-  const [meetInput, setMeetInput] = useState("e.g., ATM 2025, Dubai");
-  const [remark, setRemark] = useState(
-    "Follow-up items, halal travel interest, etc,"
-  );
-  const [yourMessage, setYourMessage] = useState(
-    "Follow-up items, halal travel interest, etc,"
-  );
-  const [selectedFollowUp, setSelectedFollowUp] = useState("yes");
-  const [selectedFollowUpType, setSelectedFollowUpType] = useState("");
-
   const followUpOptions = [
     "Thank You",
     "CR Rating Information",
@@ -44,8 +58,8 @@ const MoreInfoSection: React.FC<MoreInfoSectionProps> = ({
             </div>
             <FormField
               className="w-full "
-              onChange={setFullName}
-              placeholder={fullName}
+              onChange={setWhoMet}
+              placeholder="e.g. John Doe"
             />
           </div>
           <div className="self-stretch flex flex-col justify-start items-start gap-1">
@@ -54,8 +68,8 @@ const MoreInfoSection: React.FC<MoreInfoSectionProps> = ({
             </div>
             <FormField
               className="w-full "
-              onChange={setMeetInput}
-              placeholder={meetInput}
+              onChange={setWhereMet}
+              placeholder="e.g. ATM 2025, Dubai"
             />
           </div>
           <div className="self-stretch flex flex-col justify-start items-start gap-3">
@@ -63,10 +77,10 @@ const MoreInfoSection: React.FC<MoreInfoSectionProps> = ({
               Remarks/Notes
             </div>
             <FormField
-              onChange={setRemark}
+              onChange={setRemarks}
               className="w-full "
               textArea={true}
-              placeholder={remark}
+              placeholder="Follow-up items, halal travel interest, etc,"
             />
           </div>
         </div>
@@ -166,8 +180,9 @@ const MoreInfoSection: React.FC<MoreInfoSectionProps> = ({
               <div className="self-stretch h-32 relative bg-white rounded-xl outline outline-[0.50px] outline-offset-[-0.50px] outline-zinc-500/50 overflow-hidden">
                 <FormField
                   textArea={true}
-                  placeholder={yourMessage}
+                  placeholder="Type your message here"
                   onChange={setYourMessage}
+                  
                 />
               </div>
             </div>
@@ -184,7 +199,9 @@ const MoreInfoSection: React.FC<MoreInfoSectionProps> = ({
           <Button
             title="Email"
             color="bg-[#518FED]"
-            className={`w-full  text-white ${selectedFollowUp === "yes" ? "" : "hidden"}`}
+            className={`w-full  text-white ${
+              selectedFollowUp === "yes" ? "" : "hidden"
+            }`}
             onClick={() => {
               /* Handle Email Action 
                  Direct to email app with prefilled content (About to be implemented)
@@ -197,7 +214,9 @@ const MoreInfoSection: React.FC<MoreInfoSectionProps> = ({
             className="w-full  text-white"
             onClick={() => {
               /* Handle Next Action */
-              {handleNextClick()}
+              {
+                handleNextClick();
+              }
               // Append to spreadsheet (About to be implemented)
             }}
           />

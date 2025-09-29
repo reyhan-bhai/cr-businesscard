@@ -22,6 +22,18 @@ export class OCRService {
     try {
       console.log("Initializing Google Cloud Vision client...");
 
+      console.log(
+        "Project ID:",
+        process.env.OCR_GOOGLE_PROJECT_ID ? "Set" : "Missing"
+      );
+      console.log(
+        "Client Email:",
+        process.env.OCR_GOOGLE_CLIENT_EMAIL ? "Set" : "Missing"
+      );
+      console.log(
+        "Private Key:",
+        process.env.OCR_GOOGLE_PRIVATE_KEY ? "Set" : "Missing"
+      );
 
       // Initialize client with credentials directly
       this.client = new ImageAnnotatorClient({

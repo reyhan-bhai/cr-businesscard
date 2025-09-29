@@ -19,6 +19,7 @@ interface MoreInfoSectionProps {
   setSelectedFollowUp: Dispatch<SetStateAction<string>>;
   selectedFollowUpType: string;
   setSelectedFollowUpType: Dispatch<SetStateAction<string>>;
+  isAppending: boolean;
 }
 
 const MoreInfoSection: React.FC<MoreInfoSectionProps> = ({
@@ -37,6 +38,7 @@ const MoreInfoSection: React.FC<MoreInfoSectionProps> = ({
   setSelectedFollowUp,
   selectedFollowUpType,
   setSelectedFollowUpType,
+  isAppending,
 }) => {
   const followUpOptions = [
     "Thank You",
@@ -58,6 +60,7 @@ const MoreInfoSection: React.FC<MoreInfoSectionProps> = ({
             </div>
             <FormField
               className="w-full "
+              value={whoMet}
               onChange={setWhoMet}
               placeholder="e.g. John Doe"
             />
@@ -68,6 +71,7 @@ const MoreInfoSection: React.FC<MoreInfoSectionProps> = ({
             </div>
             <FormField
               className="w-full "
+              value={whereMet}
               onChange={setWhereMet}
               placeholder="e.g. ATM 2025, Dubai"
             />
@@ -78,6 +82,7 @@ const MoreInfoSection: React.FC<MoreInfoSectionProps> = ({
             </div>
             <FormField
               onChange={setRemarks}
+              value={remarks}
               className="w-full "
               textArea={true}
               placeholder="Follow-up items, halal travel interest, etc,"
@@ -165,6 +170,7 @@ const MoreInfoSection: React.FC<MoreInfoSectionProps> = ({
               </div>
               <FormField
                 onChange={setYourMessage}
+                value={yourMessage}
                 className="w-full"
                 placeholder="Type Email Subject here"
               />
@@ -182,7 +188,7 @@ const MoreInfoSection: React.FC<MoreInfoSectionProps> = ({
                   textArea={true}
                   placeholder="Type your message here"
                   onChange={setYourMessage}
-                  
+                  value={yourMessage}
                 />
               </div>
             </div>
@@ -209,7 +215,7 @@ const MoreInfoSection: React.FC<MoreInfoSectionProps> = ({
             }}
           />
           <Button
-            title="Next"
+            title={isAppending ? "Appending..." : "Next"}
             color="bg-[#007D49]"
             className="w-full  text-white"
             onClick={() => {
@@ -219,6 +225,7 @@ const MoreInfoSection: React.FC<MoreInfoSectionProps> = ({
               }
               // Append to spreadsheet (About to be implemented)
             }}
+            disabled={isAppending}
           />
         </div>
       </section>

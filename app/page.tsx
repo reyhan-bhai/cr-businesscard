@@ -34,6 +34,7 @@ export default function Home() {
   const [yourMessage, setYourMessage] = useState("");
   const [selectedFollowUp, setSelectedFollowUp] = useState("yes");
   const [selectedFollowUpType, setSelectedFollowUpType] = useState("");
+  const [isAppending, setIsAppending] = useState(false);
   // More Info Section End
 
   const handleSaveCard = async () => {
@@ -54,7 +55,7 @@ export default function Home() {
     formData.append("data", JSON.stringify(allData));
 
     try {
-      setIsProcessing(true);
+      setIsAppending(true);
       const response = await fetch("/api/save-card", {
         method: "POST",
         body: formData,
@@ -72,7 +73,7 @@ export default function Home() {
       console.error("Error saving card:", error);
       alert("Failed to save card. Please try again.");
     } finally {
-      setIsProcessing(false);
+      setIsAppending(false);
     }
   };
 
@@ -171,6 +172,7 @@ export default function Home() {
         isImageParsed={isImageParsed}
         isProcessing={isProcessing}
         extractedData={extractedData}
+        setExtractedData={setExtractedData}
         onDrop={handleImageDrop}
         onUploadAndParse={handleUploadAndParse}
       />
@@ -191,6 +193,7 @@ export default function Home() {
         setSelectedFollowUp={setSelectedFollowUp}
         selectedFollowUpType={selectedFollowUpType}
         setSelectedFollowUpType={setSelectedFollowUpType}
+        isAppending={isAppending}
       />
 
       <CardSavedComponent currentStep={currentStep} />

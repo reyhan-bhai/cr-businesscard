@@ -20,6 +20,7 @@ interface ParseCardSectionProps {
   isImageParsed: boolean;
   isProcessing?: boolean;
   extractedData?: BusinessCardData;
+  setExtractedData: (data: BusinessCardData) => void;
   onDrop: (droppedFiles: File[]) => void;
   onUploadAndParse: () => void;
 }
@@ -32,6 +33,7 @@ const ParseCardSection = ({
   isImageParsed,
   isProcessing,
   extractedData,
+  setExtractedData,
   onDrop,
   onUploadAndParse,
 }: ParseCardSectionProps) => {
@@ -47,7 +49,12 @@ const ParseCardSection = ({
         hasFiles={files && files.length > 0}
         isProcessing={isProcessing}
       />
-      {isImageParsed && <CRForm extractedData={extractedData} />}
+      {isImageParsed && (
+        <CRForm
+          extractedData={extractedData}
+          setExtractedData={setExtractedData}
+        />
+      )}
       <Button
         title="Next"
         color={!isImageParsed ? "bg-zinc-500/50" : "bg-[#007D49]"}

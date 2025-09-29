@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Button from "./button";
 import FormField from "./formField";
 
@@ -21,29 +21,17 @@ const FormRow = ({ children }: { children: React.ReactNode }) => (
 
 interface CRFormProps {
   extractedData?: BusinessCardData;
+  setExtractedData: (data: BusinessCardData) => void;
 }
 
-const CRForm = ({ extractedData }: CRFormProps) => {
-  const [fullName, setFullName] = useState("");
-  const [jobTitle, setJobTitle] = useState("");
-  const [company, setCompany] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [website, setWebsite] = useState("");
-  const [address, setAddress] = useState("");
+const CRForm = ({ extractedData, setExtractedData }: CRFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
 
-  useEffect(() => {
-    if (extractedData) {
-      setFullName(extractedData.full_name || "");
-      setJobTitle(extractedData.job_title || "");
-      setCompany(extractedData.company || "");
-      setEmail(extractedData.email || "");
-      setPhone(extractedData.phone || "");
-      setWebsite(extractedData.website || "");
-      setAddress(extractedData.address || "");
+  const handleFieldChange = (field: keyof BusinessCardData, value: string) => {
+    if (setExtractedData && extractedData) {
+      setExtractedData({ ...extractedData, [field]: value });
     }
-  }, [extractedData]);
+  };
   const handleEdit = () => {
     setIsEditing(true);
   };
@@ -94,38 +82,38 @@ const CRForm = ({ extractedData }: CRFormProps) => {
       <FormRow>
         <FormField
           label="Full Name"
-          value={fullName}
-          onChange={setFullName}
+          value={extractedData?.full_name || ""}
+          onChange={(value) => handleFieldChange("full_name", value)}
           fullWidth
           isDisabled={!isEditing}
         />
         <FormField
           label="Job Title"
-          value={jobTitle}
-          onChange={setJobTitle}
+          value={extractedData?.job_title || ""}
+          onChange={(value) => handleFieldChange("job_title", value)}
           fullWidth
           isDisabled={!isEditing}
         />
       </FormRow>
       <FormField
         label="Company"
-        value={company}
-        onChange={setCompany}
+        value={extractedData?.company || ""}
+        onChange={(value) => handleFieldChange("company", value)}
         fullWidth
         isDisabled={!isEditing}
       />
       <FormRow>
         <FormField
           label="Email"
-          value={email}
-          onChange={setEmail}
+          value={extractedData?.email || ""}
+          onChange={(value) => handleFieldChange("email", value)}
           fullWidth
           isDisabled={!isEditing}
         />
         <FormField
           label="Phone"
-          value={phone}
-          onChange={setPhone}
+          value={extractedData?.phone || ""}
+          onChange={(value) => handleFieldChange("phone", value)}
           fullWidth
           isDisabled={!isEditing}
         />
@@ -133,15 +121,15 @@ const CRForm = ({ extractedData }: CRFormProps) => {
       <FormRow>
         <FormField
           label="Website"
-          value={website}
-          onChange={setWebsite}
+          value={extractedData?.website || ""}
+          onChange={(value) => handleFieldChange("website", value)}
           fullWidth
           isDisabled={!isEditing}
         />
         <FormField
           label="Address"
-          value={address}
-          onChange={setAddress}
+          value={extractedData?.address || ""}
+          onChange={(value) => handleFieldChange("address", value)}
           fullWidth
           isDisabled={!isEditing}
         />

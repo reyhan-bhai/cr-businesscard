@@ -17,7 +17,7 @@ interface BusinessCardData {
 
 export default function Home() {
   // Parse Card Section
-  const [currentStep, setCurrentStep] = useState(2);
+  const [currentStep, setCurrentStep] = useState(1);
   const [files, setFiles] = useState<File[] | undefined>();
   const [filePreview, setFilePreview] = useState<string | undefined>();
   const [isImageParsed, setIsImageParsed] = useState(false);
@@ -32,7 +32,7 @@ export default function Home() {
   const [whoMet, setWhoMet] = useState("");
   const [whereMet, setWhereMet] = useState("");
   const [remarks, setRemarks] = useState("");
-  const [yourMessage, setYourMessage] = useState("");
+  const [emailMessage, setEmailMessage] = useState("");
   const [selectedFollowUp, setSelectedFollowUp] = useState("yes");
   const [selectedFollowUpType, setSelectedFollowUpType] = useState("");
   const [emailSubject, setEmailSubject] = useState("");
@@ -45,11 +45,15 @@ export default function Home() {
       return;
     }
 
+    const emailSubjectToUse = selectedFollowUpType === "Others" ? emailSubject : selectedFollowUpType;
+
     const allData = {
       ...extractedData,
       whoMet,
       whereMet,
       remarks,
+      emailMessage,
+      emailSubject: emailSubjectToUse,
     };
 
     const formData = new FormData();
@@ -191,8 +195,8 @@ export default function Home() {
         setWhereMet={setWhereMet}
         remarks={remarks}
         setRemarks={setRemarks}
-        yourMessage={yourMessage}
-        setYourMessage={setYourMessage}
+        yourMessage={emailMessage}
+        setYourMessage={setEmailMessage}
         selectedFollowUp={selectedFollowUp}
         setSelectedFollowUp={setSelectedFollowUp}
         selectedFollowUpType={selectedFollowUpType}

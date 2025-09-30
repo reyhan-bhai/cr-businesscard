@@ -64,9 +64,7 @@ const MoreInfoSection: React.FC<MoreInfoSectionProps> = ({
   const handleEmail = () => {
     if (extractedData?.email) {
       const subject = encodeURIComponent(
-        selectedFollowUpType === "Others"
-          ? emailSubject
-          : selectedFollowUpType
+        selectedFollowUpType === "Others" ? emailSubject : selectedFollowUpType
       );
       const body = encodeURIComponent(yourMessage);
       window.location.href = `mailto:${extractedData.email}?subject=${subject}&body=${body}`;
@@ -84,7 +82,7 @@ const MoreInfoSection: React.FC<MoreInfoSectionProps> = ({
         <div className="w-full p-6 bg-white rounded-xl shadow-[0px_2px_10px_6px_rgba(0,0,0,0.05)] outline outline-1 outline-offset-[-1px] outline-stone-300 inline-flex flex-col justify-start items-center gap-6 overflow-hidden">
           <div className="self-stretch flex flex-col justify-start items-start gap-1">
             <div className="justify-start text-black  text-base font-bold font-['DM_Sans']">
-              Who met this person
+              Who met this person *
             </div>
             <FormField
               className="w-full "
@@ -95,7 +93,7 @@ const MoreInfoSection: React.FC<MoreInfoSectionProps> = ({
           </div>
           <div className="self-stretch flex flex-col justify-start items-start gap-1">
             <div className="justify-start font-bold text-black text-base font-['DM_Sans']">
-              Where did you meet
+              Where did you meet *
             </div>
             <FormField
               className="w-full "
@@ -120,7 +118,7 @@ const MoreInfoSection: React.FC<MoreInfoSectionProps> = ({
 
         <div className="w-full mt-4 p-6 bg-white rounded-xl shadow-[0px_2px_10px_6px_rgba(0,0,0,0.05)] outline outline-1 outline-offset-[-1px] outline-stone-300 inline-flex flex-col justify-start items-center gap-6 overflow-visible">
           <div className="self-stretch flex flex-col justify-start items-start gap-3">
-            <div className="justify-start text-black text-base font-medium font-['DM_Sans']">
+            <div className="justify-start text-black text-base font-bold font-['DM_Sans']">
               Do you want to follow up to this person?
             </div>
             <div className="flex gap-4">
@@ -166,8 +164,8 @@ const MoreInfoSection: React.FC<MoreInfoSectionProps> = ({
             }`}
           >
             <div className="self-stretch flex flex-col justify-start items-start gap-3">
-              <div className="justify-start text-black text-base font-medium font-['DM_Sans']">
-                What is the follow-up regarding?
+              <div className="justify-start text-black text-base font-bold font-['DM_Sans']">
+                What is the follow-up regarding? *
               </div>
               <div className="w-full relative">
                 <CustomDropdown
@@ -193,8 +191,8 @@ const MoreInfoSection: React.FC<MoreInfoSectionProps> = ({
                 selectedFollowUpType === "Others" ? "" : "hidden"
               }`}
             >
-              <div className="justify-start text-black text-base font-medium font-['DM_Sans']">
-                Email Subject{" "}
+              <div className="justify-start text-black text-base font-bold font-['DM_Sans']">
+                Email Subject{" "} *
               </div>
               <FormField
                 onChange={setEmailSubject}
@@ -208,8 +206,8 @@ const MoreInfoSection: React.FC<MoreInfoSectionProps> = ({
                 selectedFollowUpType ? "" : "hidden"
               }`}
             >
-              <div className="justify-start text-black text-base font-medium font-['DM_Sans']">
-                Email Message{" "}
+              <div className="justify-start text-black text-base font-bold font-['DM_Sans']">
+                Email Message{" "} *
               </div>
               <div className="self-stretch h-32 relative bg-white rounded-xl outline outline-[0.50px] outline-offset-[-0.50px] outline-zinc-500/50 overflow-hidden">
                 <FormField
@@ -232,16 +230,18 @@ const MoreInfoSection: React.FC<MoreInfoSectionProps> = ({
           />
           <Button
             title="Email"
-            color="bg-[#518FED]"
+            color={`${!yourMessage || (selectedFollowUpType === "Others" && !emailSubject) ? "bg-gray-400" : "bg-[#518FED]"}`}
             className={`w-full  text-white ${
               selectedFollowUp === "yes" ? "" : "hidden"
-            }`}
+            }  `}
             onClick={handleEmail}
+            disabled={!yourMessage || (selectedFollowUpType === "Others" && !emailSubject)}
           />
           <Button
             title={isAppending ? "Appending..." : "Next"}
-            color="bg-[#007D49]"
-            className="w-full  text-white"
+            color={`${isAppending || !whoMet || !whereMet ? "bg-gray-400" : "bg-[#007D49]"} `}
+            className={`w-full  text-white ${isAppending || !whoMet || !whereMet ? "cursor-not-allowed" : ""}`}
+            disabled={isAppending || !whoMet || !whereMet}
             onClick={() => {
               /* Handle Next Action */
               {
@@ -249,7 +249,6 @@ const MoreInfoSection: React.FC<MoreInfoSectionProps> = ({
               }
               // Append to spreadsheet (About to be implemented)
             }}
-            disabled={isAppending}
           />
         </div>
       </section>

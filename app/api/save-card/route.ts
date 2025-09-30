@@ -36,6 +36,8 @@ export async function POST(req: NextRequest) {
       data.whereMet,
       data.remarks,
       imageUrl,
+      data.emailMessage,
+      data.emailSubject,
     ];
 
     await appendToSheet(sheetData);

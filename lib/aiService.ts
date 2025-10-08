@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import OpenAI from 'openai';
 
 const API_KEY = process.env.LLM_API || "";
 
@@ -22,20 +22,27 @@ export interface StudentInfo {
 }
 
 class AIService {
-  private genAI: GoogleGenerativeAI;
+  private openai: OpenAI;
 
   constructor() {
-    this.genAI = new GoogleGenerativeAI(API_KEY);
+    this.openai = new OpenAI({
+      apiKey: API_KEY,
+    });
   }
 
   async extractBusinessCardInfo(extractedText: string) {
     try {
-      const model = this.genAI.getGenerativeModel({
-        model: "gemini-2.5-flash",
-      });
       console.log(extractedText);
-      const prompt = `
-Extract person information from this OCR text and return ONLY a valid JSON object.
+      const completion = await this.openai.chat.completions.create({
+        model: "gpt-4o",
+        messages: [
+          {
+            role: "system",
+            content: "You are an expert at extracting structured information from business card text. Always respond with valid JSON only."
+          },
+          {
+            role: "user",
+            content: `Extract person information from this OCR text and return ONLY a valid JSON object.
 
 OCR Text: "${extractedText}"
 
@@ -51,7 +58,6 @@ Rules:
 
 2. Return ONLY this JSON structure without any formatting or code blocks:
 {
-
   "full_name": "full name",
   "job_title": "job title",
   "company": "company name",
@@ -62,12 +68,14 @@ Rules:
 }
 
 3. Use empty string "" if field not found
-4. No markdown, no explanations, ONLY the JSON object
-            `;
+4. No markdown, no explanations, ONLY the JSON object`
+          }
+        ],
+        temperature: 0.1,
+        max_tokens: 500
+      });
 
-      const result = await model.generateContent(prompt);
-      const response = await result.response;
-      const text = response.text();
+      const text = completion.choices[0]?.message?.content || "";
 
       try {
         let cleanedText = text.trim();
@@ -89,7 +97,7 @@ Rules:
         console.error("Failed to parse AI response as JSON:", text, parseError);
       }
     } catch (error) {
-      console.error("Error calling Gemini AI:", error);
+      console.error("Error calling OpenAI:", error);
     }
   }
 

@@ -3,7 +3,7 @@ import CardSavedComponent from "@/components/sections/cardSavedComponent";
 import MoreInfoSection from "@/components/sections/moreInfoSection";
 import ParseCardSection from "@/components/sections/parseCardSection";
 import StepperComponent from "@/components/stepperComponent";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface BusinessCardData {
   full_name: string;
@@ -16,6 +16,8 @@ interface BusinessCardData {
 }
 
 export default function Home() {
+  const [mounted, setMounted] = useState(false);
+  
   // Parse Card Section
   const [currentStep, setCurrentStep] = useState(1);
   const [files, setFiles] = useState<File[] | undefined>();
@@ -38,6 +40,10 @@ export default function Home() {
   const [emailSubject, setEmailSubject] = useState("");
   const [isAppending, setIsAppending] = useState(false);
   // More Info Section End
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleSaveCard = async () => {
     if (!files || files.length === 0 || !extractedData) {
@@ -91,7 +97,6 @@ export default function Home() {
       } else {
         setCurrentStep((prev) => prev + 1);
         console.log("Moving to step:", currentStep + 1);
-        // Scroll to the top
         window.scrollTo({ top: 0 });
       }
     }
@@ -165,6 +170,10 @@ export default function Home() {
       setIsProcessing(false);
     }
   };
+
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <>

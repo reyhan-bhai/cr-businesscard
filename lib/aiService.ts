@@ -69,6 +69,7 @@ Rules:
 
 3. Use empty string "" if field not found
 4. No markdown, no explanations, ONLY the JSON object`
+
           }
         ],
         temperature: 0.1,

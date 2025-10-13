@@ -30,6 +30,7 @@ export async function authenticateGoogleDrive(): Promise<void> {
 /**
  * Get file metadata from Google Drive
  */
+
 export async function getFileMetadata(fileId: string = GOOGLE_DRIVE_ID) {
   try {
     await authenticateGoogleDrive();

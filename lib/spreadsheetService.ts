@@ -33,8 +33,8 @@ export async function appendToSheet(values: string[]) {
 
   try {
     const response = await glSheets.spreadsheets.values.append({
-      spreadsheetId: "1daipgiXZeeznjoQ2c5Y5Wn6TCsFd5ckfH5UMwn-bi2I",
-      range: "Sheet2!A1",
+      spreadsheetId: "1hxo3xvlh4dh3vZKsgiT2VUr1nEwv06yWhrJG-4GiBOw",
+      range: "Sheet1!A1",
       valueInputOption: "USER_ENTERED",
       requestBody: {
         values: [values],

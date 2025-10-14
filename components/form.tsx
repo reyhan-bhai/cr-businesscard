@@ -116,7 +116,7 @@ const CRForm = ({
         />
         <FormField
           label="Phone"
-          value={extractedData?.phone || ""}
+          value={extractedData?.phone?.replace(/^\+/, '') || ""}
           onChange={(value) => handleFieldChange("phone", value)}
           fullWidth
           isDisabled={!isEditing}

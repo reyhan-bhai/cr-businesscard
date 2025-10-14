@@ -58,6 +58,7 @@ export default function Home() {
 
     const allData = {
       ...extractedData,
+      phone: extractedData.phone?.replace(/^\+/, '') || "",
       whoMet,
       whereMet,
       remarks,

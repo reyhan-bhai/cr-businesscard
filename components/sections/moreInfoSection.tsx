@@ -79,42 +79,53 @@ const MoreInfoSection: React.FC<MoreInfoSectionProps> = ({
     return ""; // Default return value
   };
 
-  const followUpEmail = (
+    const followUpEmail = (
     selectedFollowUpType: string,
     firstName: string,
     whereMet: string,
     company: string
   ): string => {
+    const capitalizeWords = (name: string): string => {
+      return name
+        .trim()
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join(' ');
+    };
+    
+    const formattedName = capitalizeWords(firstName);
+
     if (selectedFollowUpType === "Thank You") {
-      return `Dear ${firstName},
+      return `Dear ${formattedName},
 It was a pleasure meeting you at ${whereMet} and learning more about your work with ${company}.
 
 At CrescentRating and HalalTrip, we're always keen to collaborate with like-minded partners shaping the future of inclusive travel. I hope we can continue the conversation and explore possible areas of synergy.
 
 Wishing you continued success, and I look forward to staying connected.`;
     }
+    
     if (selectedFollowUpType === "CR Rating Information") {
-      return `Dear ${firstName},
+      return `Dear ${formattedName},
 
 It was great meeting you at ${whereMet}. I wanted to briefly share more about CrescentRating and how we support destinations and businesses in enhancing their Muslim-friendly travel experiences.
 
-Since 2008, CrescentRating has collaborated with over 25 destinations worldwide, providing comprehensive solutions — from research and consultancy to training, accreditation, and destination marketing. We also publish the Mastercard-CrescentRating Global Muslim Travel Index (GMTI), the industry’s leading benchmark for Muslim-friendly destinations.
+Since 2008, CrescentRating has collaborated with over 25 destinations worldwide, providing comprehensive solutions — from research and consultancy to training, accreditation, and destination marketing. We also publish the Mastercard-CrescentRating Global Muslim Travel Index (GMTI), the industry's leading benchmark for Muslim-friendly destinations.
 
-Please let me know if you’d like to schedule a short call to explore potential collaborations.
+Please let me know if you'd like to schedule a short call to explore potential collaborations.
 `;
     }
     if (selectedFollowUpType === "More Discussion") {
-      return `Dear ${firstName},
+      return `Dear ${formattedName},
 
-I hope you’re doing well. It was a pleasure connecting with you at ${whereMet}.
+I hope you're doing well. It was a pleasure connecting with you at ${whereMet}.
 
-As mentioned, I’d love to set up a time to explore how CrescentRating and HalalTrip can support your initiatives — whether through strategic advisory, training, or destination accreditation.
+As mentioned, I'd love to set up a time to explore how CrescentRating and HalalTrip can support your initiatives — whether through strategic advisory, training, or destination accreditation.
 
-Would you be available for a short call next week? I’m happy to adjust to your preferred time zone.
+Would you be available for a short call next week? I'm happy to adjust to your preferred time zone.
 `;
     }
     if (selectedFollowUpType === "Others") {
-      return `Dear ${firstName},`;
+      return `Dear ${formattedName},`;
     }
     return ""; // Default return value
   };

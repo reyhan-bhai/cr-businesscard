@@ -36,6 +36,7 @@ export async function appendToSheet(values: string[]) {
       spreadsheetId: "1hxo3xvlh4dh3vZKsgiT2VUr1nEwv06yWhrJG-4GiBOw",
       range: "Sheet1!A1",
       valueInputOption: "USER_ENTERED",
+      insertDataOption: "INSERT_ROWS",
       requestBody: {
         values: [values],
       },

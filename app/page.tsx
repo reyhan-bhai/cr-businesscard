@@ -7,7 +7,6 @@ import { useState, useEffect } from "react";
 
 export const dynamic = 'force-dynamic';
 
-
 interface BusinessCardData {
   full_name: string;
   job_title: string;

@@ -1,8 +1,7 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import Button from "../button";
 import CustomDropdown from "../CustomDropdown";
 import FormField from "../formField";
-
 interface BusinessCardData {
   full_name: string;
   job_title: string;
@@ -61,10 +60,92 @@ const MoreInfoSection: React.FC<MoreInfoSectionProps> = ({
     "More Discussion",
     "Others",
   ];
+  const followUpSubject = (
+    selectedFollowUpType: string,
+    whereMet: string
+  ): string => {
+    if (selectedFollowUpType === "Thank You") {
+      return `Great Connecting at ${whereMet} – Let's Stay in Touch`;
+    }
+    if (selectedFollowUpType === "CR Rating Information") {
+      return `Introducing CrescentRating – Partnering to Advance Muslim-Friendly Travel`;
+    }
+    if (selectedFollowUpType === "More Discussion") {
+      return `Following Up – Exploring Collaboration Opportunities`;
+    }
+    if (selectedFollowUpType === "Others") {
+      return `Great to Connect – Let's Keep the Conversation Going`;
+    }
+    return ""; // Default return value
+  };
+
+  const followUpEmail = (
+    selectedFollowUpType: string,
+    firstName: string,
+    whereMet: string,
+    company: string
+  ): string => {
+    if (selectedFollowUpType === "Thank You") {
+      return `Dear ${firstName},
+It was a pleasure meeting you at ${whereMet} and learning more about your work with ${company}.
+
+At CrescentRating and HalalTrip, we're always keen to collaborate with like-minded partners shaping the future of inclusive travel. I hope we can continue the conversation and explore possible areas of synergy.
+
+Wishing you continued success, and I look forward to staying connected.`;
+    }
+    if (selectedFollowUpType === "CR Rating Information") {
+      return `Dear ${firstName},
+
+It was great meeting you at ${whereMet}. I wanted to briefly share more about CrescentRating and how we support destinations and businesses in enhancing their Muslim-friendly travel experiences.
+
+Since 2008, CrescentRating has collaborated with over 25 destinations worldwide, providing comprehensive solutions — from research and consultancy to training, accreditation, and destination marketing. We also publish the Mastercard-CrescentRating Global Muslim Travel Index (GMTI), the industry’s leading benchmark for Muslim-friendly destinations.
+
+Please let me know if you’d like to schedule a short call to explore potential collaborations.
+`;
+    }
+    if (selectedFollowUpType === "More Discussion") {
+      return `Dear ${firstName},
+
+I hope you’re doing well. It was a pleasure connecting with you at ${whereMet}.
+
+As mentioned, I’d love to set up a time to explore how CrescentRating and HalalTrip can support your initiatives — whether through strategic advisory, training, or destination accreditation.
+
+Would you be available for a short call next week? I’m happy to adjust to your preferred time zone.
+`;
+    }
+    if (selectedFollowUpType === "Others") {
+      return `Dear ${firstName},`;
+    }
+    return ""; // Default return value
+  };
+
+  useEffect(() => {
+    if (selectedFollowUpType) {
+      const subject = followUpSubject(selectedFollowUpType, whereMet);
+      setEmailSubject(subject);
+      const message = followUpEmail(
+        selectedFollowUpType,
+        extractedData?.full_name || "",
+        whereMet,
+        extractedData?.company || ""
+      );
+      setYourMessage(message);
+    }
+  }, [
+    selectedFollowUpType,
+    whereMet,
+    extractedData?.full_name,
+    extractedData?.company,
+    setEmailSubject,
+    setYourMessage,
+  ]);
+
   const handleEmail = () => {
     if (extractedData?.email) {
       const subject = encodeURIComponent(
-        selectedFollowUpType === "Others" ? emailSubject : selectedFollowUpType
+        selectedFollowUpType === "Others"
+          ? emailSubject
+          : followUpSubject(selectedFollowUpType, whereMet)
       );
       const body = encodeURIComponent(yourMessage);
       window.location.href = `mailto:${extractedData.email}?subject=${subject}&body=${body}`;
@@ -187,18 +268,19 @@ const MoreInfoSection: React.FC<MoreInfoSectionProps> = ({
             </div> */}
             </div>
             <div
-              className={`self-stretch flex flex-col justify-start items-start gap-3 ${
-                selectedFollowUpType === "Others" ? "" : "hidden"
+              className={`self-stretch flex flex-col justify-start items-start ${
+                selectedFollowUpType ? "" : "hidden"
               }`}
             >
               <div className="justify-start text-black text-base font-bold font-['DM_Sans']">
-                Email Subject{" "} *
+                Email Subject *
               </div>
               <FormField
                 onChange={setEmailSubject}
                 value={emailSubject}
                 className="w-full"
                 placeholder="Type Email Subject here"
+                isDisabled={selectedFollowUpType !== "Others"}
               />
             </div>
             <div
@@ -207,7 +289,7 @@ const MoreInfoSection: React.FC<MoreInfoSectionProps> = ({
               }`}
             >
               <div className="justify-start text-black text-base font-bold font-['DM_Sans']">
-                Email Message{" "} *
+                Email Message *
               </div>
               <div className="self-stretch h-32 relative bg-white rounded-xl outline outline-[0.50px] outline-offset-[-0.50px] outline-zinc-500/50 overflow-hidden">
                 <FormField
@@ -215,6 +297,7 @@ const MoreInfoSection: React.FC<MoreInfoSectionProps> = ({
                   placeholder="Type your message here"
                   onChange={setYourMessage}
                   value={yourMessage}
+                  isDisabled={selectedFollowUpType !== "Others"}
                 />
               </div>
             </div>
@@ -230,17 +313,31 @@ const MoreInfoSection: React.FC<MoreInfoSectionProps> = ({
           />
           <Button
             title="Email"
-            color={`${!yourMessage || (selectedFollowUpType === "Others" && !emailSubject) ? "bg-gray-400" : "bg-[#518FED]"}`}
+            color={`${
+              !yourMessage ||
+              (selectedFollowUpType === "Others" && !emailSubject)
+                ? "bg-gray-400"
+                : "bg-[#518FED]"
+            }`}
             className={`w-full  text-white ${
               selectedFollowUp === "yes" ? "" : "hidden"
             }  `}
             onClick={handleEmail}
-            disabled={!yourMessage || (selectedFollowUpType === "Others" && !emailSubject)}
+            disabled={
+              !yourMessage ||
+              (selectedFollowUpType === "Others" && !emailSubject)
+            }
           />
           <Button
             title={isAppending ? "Appending..." : "Next"}
-            color={`${isAppending || !whoMet || !whereMet ? "bg-gray-400" : "bg-[#007D49]"} `}
-            className={`w-full  text-white ${isAppending || !whoMet || !whereMet ? "cursor-not-allowed" : ""}`}
+            color={`${
+              isAppending || !whoMet || !whereMet
+                ? "bg-gray-400"
+                : "bg-[#007D49]"
+            } `}
+            className={`w-full  text-white ${
+              isAppending || !whoMet || !whereMet ? "cursor-not-allowed" : ""
+            }`}
             disabled={isAppending || !whoMet || !whereMet}
             onClick={() => {
               /* Handle Next Action */

@@ -65,23 +65,43 @@ const FormField = ({
         </div>
       );
     } else if (textArea === true) {
-      return (
-        <>
+       return (
+        <div
+          className={`${
+            fullWidth && className === ""
+              ? "w-full flex flex-col"
+              : ` ${className} flex-1 flex flex-col`
+          } justify-start items-start gap-1.5`}
+        >
+          {label && (
+            <div className="justify-start text-black text-sm md:text-base font-medium font-['DM_Sans']">
+              {label}
+            </div>
+          )}
           <textarea
             name=""
             placeholder={placeholder}
             id=""
             rows={4}
+            value={value}
             onChange={(e) => onChange(e.target.value)}
             onFocus={() => {
               setIsFocused(true);
               if (onFocus) onFocus();
             }}
+            disabled={isDisabled}
             onBlur={() => setIsFocused(false)}
-            className={`${isFocused ? "border-2 border-blue-500" : "border"} w-full self-stretch h-32 relative bg-white rounded-xl outline outline-[0.50px] outline-offset-[-0.50px] outline-zinc-500/50 overflow-hidden pl-2.5 pt-2.5`}
-          >
-          </textarea>
-        </>
+            className={`${
+              isFocused ? "border-2 border-blue-500" : "border"
+            } ${
+              isDisabled ? "bg-zinc-200" : ""
+            } w-full h-32 px-3 py-3 md:py-2 bg-white rounded-xl ${
+              !isDisabled && !isFocused
+                ? "outline outline-[0.50px] outline-offset-[-0.50px] outline-zinc-500/50"
+                : ""
+            } overflow-y-auto resize-none text-zinc-600 text-sm md:text-base font-medium font-['DM_Sans']`}
+          />
+        </div>
       );
     }
   }

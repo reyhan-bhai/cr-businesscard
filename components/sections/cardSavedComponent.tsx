@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+import Link from "next/link";
 import Button from "../button";
 interface CardSaveComponentProps {
   currentStep: number;
@@ -28,12 +29,13 @@ const CardSaveComponent: React.FC<CardSaveComponentProps> = ({
           </p>
 
           <div className="flex flex-col w-full gap-y-[12px]">
-            <Button
-              title="CRHT Contact Sheets"
-              color="bg-[#007D49]"
-              className="w-full  text-white"
-              // onClick={handleNextClick}
-            />
+            <Link href="https://docs.google.com/spreadsheets/d/1hxo3xvlh4dh3vZKsgiT2VUr1nEwv06yWhrJG-4GiBOw/edit?gid=0#gid=0">
+              <Button
+                title="CRHT Contact Sheets"
+                color="bg-[#007D49]"
+                className="w-full  text-white"
+              />
+            </Link>
             <Button
               title="Upload Another Card"
               color="bg-white-500"

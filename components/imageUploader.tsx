@@ -26,7 +26,7 @@ const ImageUploader = ({
   return (
     <div className="self-stretch p-8 bg-white rounded-xl  outline outline-1 outline-offset-[-1px] outline-stone-300 flex flex-col justify-center items-center gap-6 overflow-hidden">
       <Dropzone
-        accept={{ "image/*": [".png", ".jpg", ".jpeg"] }}
+        // accept={{ "image/*": [".png", ".jpg", ".jpeg"] }}
         onDrop={onDrop}
         onError={console.error}
         src={files}

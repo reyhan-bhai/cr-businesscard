@@ -5,6 +5,7 @@ import {
 } from "@/components/ui/shadcn-io/dropzone";
 import Image from "next/image";
 import Button from "./button";
+import { useRef } from "react";
 
 interface ImageUploaderProps {
   files?: File[];
@@ -23,10 +24,34 @@ const ImageUploader = ({
   hasFiles,
   isProcessing,
 }: ImageUploaderProps) => {
+  const cameraRef = useRef<HTMLInputElement>(null);
+  const galleryRef = useRef<HTMLInputElement>(null);
+  const isMobile =
+    typeof window !== "undefined" &&
+    /Mobi|Android|iPhone/i.test(navigator.userAgent);
   return (
     <div className="self-stretch p-8 bg-white rounded-xl  outline outline-1 outline-offset-[-1px] outline-stone-300 flex flex-col justify-center items-center gap-6 overflow-hidden">
+      {/* Hidden camera input */}
+      <input
+        type="file"
+        accept="image/*"
+        capture="environment"
+        ref={cameraRef}
+        className="hidden"
+        onChange={(e) => e.target.files && onDrop([...e.target.files])}
+      />
+
+      {/* Hidden gallery input */}
+      <input
+        type="file"
+        accept="image/*"
+        ref={galleryRef}
+        className="hidden"
+        onChange={(e) => e.target.files && onDrop([...e.target.files])}
+      />
+
       <Dropzone
-        // accept={{ "image/*": [".png", ".jpg", ".jpeg"] }}
+        {...(isMobile ? { noClick: true } : {})}
         onDrop={onDrop}
         onError={console.error}
         src={files}
@@ -34,21 +59,55 @@ const ImageUploader = ({
       >
         <DropzoneEmptyState>
           <div className="flex flex-col items-center justify-center">
-            <div className="w-full truncate text-wrap text-center">
-              <span className="text-black text-base font-bold font-['DM_Sans']">
-                Drop an image{" "}
-              </span>
-              <span className="text-black text-base font-normal font-['DM_Sans']">
-                or
-              </span>
-              <span className="text-black text-base font-bold font-['DM_Sans']">
-                {" "}
-                tap to choose
-              </span>
-            </div>
-            <div className="w-full truncate text-wrap text-center text-black text-sm font-normal font-['DM_Sans']">
-              Large images are auto-resized before OCR for speed
-            </div>
+            {/* Desktop: Text */}
+            {!isMobile && (
+              <div className="w-full">
+                <span className="font-bold">Drop an image</span> or{" "}
+                <span
+                  className="font-bold text-blue-600 underline cursor-pointer"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    galleryRef.current?.click(); // desktop picker
+                  }}
+                >
+                  click to upload
+                </span>
+              </div>
+            )}
+
+            {/* Mobile: Text */}
+            {isMobile && (
+              <div className="w-full">
+                <span className="font-bold">Pick an image</span>
+              </div>
+            )}
+
+            {/* Mobile: Buttons */}
+            {isMobile && (
+              <div className="flex flex-row mt-4 gap-3 w-full px-6">
+                <button
+                  type="button"
+                  className="w-full py-2 px-2 rounded-lg bg-blue-800 text-white font-semibold"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    cameraRef.current?.click();
+                  }}
+                >
+                  Take Photo
+                </button>
+
+                <button
+                  type="button"
+                  className="w-full py-2 px-2 rounded-lg bg-white text-black font-semibold border border-gray-300"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    galleryRef.current?.click();
+                  }}
+                >
+                  Open Gallery
+                </button>
+              </div>
+            )}
           </div>
         </DropzoneEmptyState>
         <DropzoneContent>

@@ -58,6 +58,7 @@ export const Dropzone = ({
   ...props
 }: DropzoneProps) => {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    noClick: disabled,
     accept,
     maxFiles,
     maxSize,

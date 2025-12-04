@@ -3,9 +3,9 @@ import CardSavedComponent from "@/components/sections/cardSavedComponent";
 import MoreInfoSection from "@/components/sections/moreInfoSection";
 import ParseCardSection from "@/components/sections/parseCardSection";
 import StepperComponent from "@/components/stepperComponent";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 interface BusinessCardData {
   full_name: string;
@@ -19,7 +19,7 @@ interface BusinessCardData {
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
-  
+
   // Parse Card Section
   const [currentStep, setCurrentStep] = useState(1);
   const [files, setFiles] = useState<File[] | undefined>();
@@ -45,6 +45,25 @@ export default function Home() {
 
   useEffect(() => {
     setMounted(true);
+
+    const dummyData: BusinessCardData = {
+      full_name: "Test User Static",
+      job_title: "Software Engineer",
+      company: "Tech Corp",
+      email: "test.duplicate@example.com", // Change this email to test duplication
+      phone: "08123456789",
+      website: "www.example.com",
+      address: "Jakarta, Indonesia",
+    };
+
+    setExtractedData(dummyData);
+    setIsImageParsed(true);
+
+    // Create a dummy file because handleSaveCard expects files[0]
+    const dummyFile = new File(["dummy content"], "test-image.png", {
+      type: "image/png",
+    });
+    setFiles([dummyFile]);
   }, []);
 
   const handleSaveCard = async () => {
@@ -53,11 +72,12 @@ export default function Home() {
       return;
     }
 
-    const emailSubjectToUse = selectedFollowUpType === "Others" ? emailSubject : selectedFollowUpType;
+    const emailSubjectToUse =
+      selectedFollowUpType === "Others" ? emailSubject : selectedFollowUpType;
 
     const allData = {
       ...extractedData,
-      phone: extractedData.phone?.replace(/^\+/, '') || "",
+      phone: extractedData.phone?.replace(/^\+/, "") || "",
       whoMet,
       whereMet,
       remarks,
@@ -77,6 +97,11 @@ export default function Home() {
       });
 
       if (!response.ok) {
+        if(response.status === 409) {
+          const errorResult = await response.json();
+          alert(errorResult.error);
+          return;
+        }
         throw new Error("Failed to save card data");
       }
 
@@ -86,7 +111,7 @@ export default function Home() {
       window.scrollTo({ top: 0 });
     } catch (error) {
       console.error("Error saving card:", error);
-      alert("Failed to save card. Please try again.");
+      alert("Error saving card. Please try again.");
     } finally {
       setIsAppending(false);
     }

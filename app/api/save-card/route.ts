@@ -1,5 +1,5 @@
 import { uploadFile } from "@/lib/googledriveService";
-import { appendToSheet } from "@/lib/spreadsheetService";
+import { appendToSheet, checkIfEmailExists } from "@/lib/spreadsheetService";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -7,6 +7,21 @@ export async function POST(req: NextRequest) {
     const formData = await req.formData();
     const image = formData.get("image") as File;
     const data = JSON.parse(formData.get("data") as string);
+
+    if (data.email) {
+      const checkResult = await checkIfEmailExists(data.email);
+      
+      if (checkResult.exists) {
+        return NextResponse.json(
+          { 
+            error: `This person already exists (Row: ${checkResult.rowIndex})`, 
+            isDuplicate: true,
+            rowIndex: checkResult.rowIndex 
+          },
+          { status: 409 } // 409 Conflict
+        );
+      }
+    }
 
     if (!image) {
       return NextResponse.json({ error: "No image provided" }, { status: 400 });

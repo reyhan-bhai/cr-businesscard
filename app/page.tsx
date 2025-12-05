@@ -4,7 +4,7 @@ import MoreInfoSection from "@/components/sections/moreInfoSection";
 import ParseCardSection from "@/components/sections/parseCardSection";
 import StepperComponent from "@/components/stepperComponent";
 import { useEffect, useState } from "react";
-
+import Swal from "sweetalert2";
 export const dynamic = "force-dynamic";
 
 interface BusinessCardData {
@@ -46,20 +46,20 @@ export default function Home() {
   useEffect(() => {
     setMounted(true);
 
-    const dummyData: BusinessCardData = {
-      full_name: "Test User Static",
-      job_title: "Software Engineer",
-      company: "Tech Corp",
-      email: "test.duplicate@example.com", // Change this email to test duplication
-      phone: "08123456789",
-      website: "www.example.com",
-      address: "Jakarta, Indonesia",
-    };
+    // const dummyData: BusinessCardData = {
+    //   full_name: "Test User Static",
+    //   job_title: "Software Engineer",
+    //   company: "Tech Corp",
+    //   email: "test.duplicate@example.com",
+    //   phone: "08123456789",
+    //   website: "www.example.com",
+    //   address: "Jakarta, Indonesia",
+    // };
 
-    setExtractedData(dummyData);
-    setIsImageParsed(true);
+    // setExtractedData(dummyData);
+    // setIsImageParsed(true);
 
-    // Create a dummy file because handleSaveCard expects files[0]
+    // // Create a dummy file because handleSaveCard expects files[0]
     const dummyFile = new File(["dummy content"], "test-image.png", {
       type: "image/png",
     });
@@ -96,14 +96,14 @@ export default function Home() {
         body: formData,
       });
 
-      if (!response.ok) {
-        if(response.status === 409) {
-          const errorResult = await response.json();
-          alert(errorResult.error);
-          return;
-        }
-        throw new Error("Failed to save card data");
-      }
+      // if (!response.ok) {
+      //   if(response.status === 409) {
+      //     const errorResult = await response.json();
+      //     alert(errorResult.error);
+      //     return;
+      //   }
+      //   throw new Error("Failed to save card data");
+      // }
 
       const result = await response.json();
       console.log(result.message);
@@ -155,39 +155,83 @@ export default function Home() {
     try {
       console.log("Starting OCR and AI processing...");
 
-      const formData = new FormData();
-      formData.append("image", files[0]);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      const ocrResponse = await fetch("/api/ocr", {
-        method: "POST",
-        body: formData,
-      });
+      const businessCardData = {
+        full_name: "Dummy AI User",
+        job_title: "Mock Data Specialist",
+        company: "Simulation Corp",
+        email: "test.duplicate@examples.com",
+        phone: "+65 9123 4567",
+        website: "www.simulation.com",
+        address: "123 Fake Street, Singapore",
+      };
 
-      if (!ocrResponse.ok) {
-        throw new Error("Failed to extract text from image");
-      }
+      console.log("Mock AI processing completed:", businessCardData);
 
-      const ocrResult = await ocrResponse.json();
-      const extractedText = ocrResult.data.fullText;
+      // const formData = new FormData();
+      // formData.append("image", files[0]);
 
-      console.log("OCR extraction completed:", extractedText);
+      // const ocrResponse = await fetch("/api/ocr", {
+      //   method: "POST",
+      //   body: formData,
+      // });
 
-      const aiResponse = await fetch("/api/ai/extract-businesscard", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ extractedText }),
-      });
+      // if (!ocrResponse.ok) {
+      //   throw new Error("Failed to extract text from image");
+      // }
 
-      if (!aiResponse.ok) {
-        throw new Error("Failed to process text with AI");
-      }
+      // const ocrResult = await ocrResponse.json();
+      // const extractedText = ocrResult.data.fullText;
 
-      const aiResult = await aiResponse.json();
-      const businessCardData = aiResult.data;
+      // console.log("OCR extraction completed:", extractedText);
+
+      // const aiResponse = await fetch("/api/ai/extract-businesscard", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify({ extractedText }),
+      // });
+
+      // if (!aiResponse.ok) {
+      //   throw new Error("Failed to process text with AI");
+      // }
+
+      // const aiResult = await aiResponse.json();
+      // const businessCardData = aiResult.data;
 
       console.log("AI processing completed:", businessCardData);
+
+      if (businessCardData.email) {
+        try {
+          const checkRes = await fetch("/api/check-email", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email: businessCardData.email }),
+          });
+
+          if (checkRes.ok) {
+            const checkData = await checkRes.json();
+            if (checkData.exists) {
+              Swal.fire({
+                icon: "error",
+                // title: "Oops...",
+                // text: "Something went wrong!",
+                heightAuto: true,
+                html: `This person is already exists in the spreadsheet <br/> (Row: ${checkData.rowIndex}) with email <b>"${businessCardData.email}"</b>.`,
+              });
+              // alert(
+              //   `⚠️ DUPLICATE DATA FOUND!\n\nEmail "${businessCardData.email}" already exists in the spreadsheet (Row: ${checkData.rowIndex}).`
+              // );
+              setIsProcessing(false);
+              return;
+            }
+          }
+        } catch (err) {
+          console.error("Failed to check duplicate:", err);
+        }
+      }
 
       setExtractedData(businessCardData);
       setIsImageParsed(true);

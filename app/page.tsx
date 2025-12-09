@@ -59,11 +59,10 @@ export default function Home() {
     // setExtractedData(dummyData);
     // setIsImageParsed(true);
 
-    // // Create a dummy file because handleSaveCard expects files[0]
-    const dummyFile = new File(["dummy content"], "test-image.png", {
-      type: "image/png",
-    });
-    setFiles([dummyFile]);
+    // const dummyFile = new File(["dummy content"], "test-image.png", {
+    //   type: "image/png",
+    // });
+    // setFiles([dummyFile]);
   }, []);
 
   const handleSaveCard = async () => {
@@ -155,51 +154,51 @@ export default function Home() {
     try {
       console.log("Starting OCR and AI processing...");
 
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      const businessCardData = {
-        full_name: "Dummy AI User",
-        job_title: "Mock Data Specialist",
-        company: "Simulation Corp",
-        email: "test.duplicate@examples.com",
-        phone: "+65 9123 4567",
-        website: "www.simulation.com",
-        address: "123 Fake Street, Singapore",
-      };
+      // const businessCardData = {
+      //   full_name: "Dummy AI User",
+      //   job_title: "Mock Data Specialist",
+      //   company: "Simulation Corp",
+      //   email: "test.duplicate@examples.com",
+      //   phone: "+65 9123 4567",
+      //   website: "www.simulation.com",
+      //   address: "123 Fake Street, Singapore",
+      // };
 
-      console.log("Mock AI processing completed:", businessCardData);
+      // console.log("Mock AI processing completed:", businessCardData);
 
-      // const formData = new FormData();
-      // formData.append("image", files[0]);
+      const formData = new FormData();
+      formData.append("image", files[0]);
 
-      // const ocrResponse = await fetch("/api/ocr", {
-      //   method: "POST",
-      //   body: formData,
-      // });
+      const ocrResponse = await fetch("/api/ocr", {
+        method: "POST",
+        body: formData,
+      });
 
-      // if (!ocrResponse.ok) {
-      //   throw new Error("Failed to extract text from image");
-      // }
+      if (!ocrResponse.ok) {
+        throw new Error("Failed to extract text from image");
+      }
 
-      // const ocrResult = await ocrResponse.json();
-      // const extractedText = ocrResult.data.fullText;
+      const ocrResult = await ocrResponse.json();
+      const extractedText = ocrResult.data.fullText;
 
-      // console.log("OCR extraction completed:", extractedText);
+      console.log("OCR extraction completed:", extractedText);
 
-      // const aiResponse = await fetch("/api/ai/extract-businesscard", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify({ extractedText }),
-      // });
+      const aiResponse = await fetch("/api/ai/extract-businesscard", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ extractedText }),
+      });
 
-      // if (!aiResponse.ok) {
-      //   throw new Error("Failed to process text with AI");
-      // }
+      if (!aiResponse.ok) {
+        throw new Error("Failed to process text with AI");
+      }
 
-      // const aiResult = await aiResponse.json();
-      // const businessCardData = aiResult.data;
+      const aiResult = await aiResponse.json();
+      const businessCardData = aiResult.data;
 
       console.log("AI processing completed:", businessCardData);
 

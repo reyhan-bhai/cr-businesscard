@@ -16,7 +16,7 @@ interface ParseCardSectionProps {
   currentStep: number;
   handleNextClick: () => void;
   files: File[] | undefined;
-  filePreview: string | undefined;
+  filePreviews: (string | undefined)[];
   isImageParsed: boolean;
   isProcessing?: boolean;
   extractedData?: BusinessCardData;
@@ -31,7 +31,7 @@ const ParseCardSection = ({
   currentStep,
   handleNextClick,
   files,
-  filePreview,
+  filePreviews,
   isImageParsed,
   isProcessing,
   extractedData,
@@ -53,11 +53,21 @@ const ParseCardSection = ({
       className={`${currentStep === 1 ? "" : "hidden"} parse-card-page w-full`}
     >
       <ImageUploader
-        files={files}
-        filePreview={filePreview}
-        onDrop={onDrop}
+        frontFiles={files && files[0] ? [files[0]] : []}
+        backFiles={files && files[1] ? [files[1]] : []}
+        frontPreview={filePreviews[0]}
+        backPreview={filePreviews[1]}
+        onFrontDrop={(droppedFiles) => {
+          const newFiles = files ? [...files] : [];
+          newFiles[0] = droppedFiles[0];
+          onDrop(newFiles);
+        }}
+        onBackDrop={(droppedFiles) => {
+          const newFiles = files ? [...files] : [];
+          newFiles[1] = droppedFiles[0];
+          onDrop(newFiles);
+        }}
         onUploadAndParse={onUploadAndParse}
-        hasFiles={files && files.length > 0}
         isProcessing={isProcessing}
       />
       {isImageParsed && (

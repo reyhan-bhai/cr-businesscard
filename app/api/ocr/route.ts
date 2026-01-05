@@ -6,53 +6,65 @@ export async function POST(request: NextRequest) {
 
   try {
     const formData = await request.formData();
-    const file = formData.get("image") as File;
+    const files = formData.getAll("image") as File[];
 
     console.log(
-      "File received:",
-      file ? `${file.name} (${file.size} bytes)` : "No file"
+      "Files received:",
+      files.length > 0
+        ? files.map((f) => `${f.name} (${f.size} bytes)`).join(", ")
+        : "No files"
     );
 
-    if (!file) {
+    if (files.length === 0) {
       return NextResponse.json(
         { error: "No image file provided" },
         { status: 400 }
       );
     }
 
-    // Validate file type
-    if (!file.type.startsWith("image/")) {
-      return NextResponse.json(
-        { error: "Invalid file type. Please upload an image." },
-        { status: 400 }
-      );
+    let combinedText = "";
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let combinedWords: any[] = [];
+
+    for (const file of files) {
+      // Validate file type
+      if (!file.type.startsWith("image/")) {
+        return NextResponse.json(
+          { error: "Invalid file type. Please upload an image." },
+          { status: 400 }
+        );
+      }
+
+      // Validate file size (max 10MB)
+      if (file.size > 10 * 1024 * 1024) {
+        return NextResponse.json(
+          { error: "File size too large. Maximum size is 10MB." },
+          { status: 400 }
+        );
+      }
+
+      console.log(`Processing file: ${file.name}`);
+      // Convert file to buffer
+      const arrayBuffer = await file.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+
+      // Extract text using OCR service
+      const result = await ocrService.extractTextFromImage(buffer);
+      combinedText += result.fullText + "\n";
+      combinedWords = [...combinedWords, ...result.words];
     }
 
-    // Validate file size (max 10MB)
-    if (file.size > 10 * 1024 * 1024) {
-      return NextResponse.json(
-        { error: "File size too large. Maximum size is 10MB." },
-        { status: 400 }
-      );
-    }
-
-    console.log("Converting file to buffer...");
-    // Convert file to buffer
-    const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
-    console.log("Buffer created, size:", buffer.length);
-
-    console.log("Calling OCR service...");
-    // Extract text using OCR service
-    const result = await ocrService.extractTextFromImage(buffer);
     console.log("OCR result:", {
-      textLength: result.fullText.length,
-      wordsCount: result.words.length,
+      textLength: combinedText.length,
+      wordsCount: combinedWords.length,
     });
 
     return NextResponse.json({
       success: true,
-      data: result,
+      data: {
+        fullText: combinedText,
+        words: combinedWords,
+      },
       message: "Text extracted successfully",
     });
   } catch (error) {

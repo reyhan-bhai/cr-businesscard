@@ -23,7 +23,7 @@ export default function Home() {
   // Parse Card Section
   const [currentStep, setCurrentStep] = useState(1);
   const [files, setFiles] = useState<File[] | undefined>();
-  const [filePreview, setFilePreview] = useState<string | undefined>();
+  const [filePreviews, setFilePreviews] = useState<(string | undefined)[]>([]);
   const [isImageParsed, setIsImageParsed] = useState(false);
   const [extractedData, setExtractedData] = useState<
     BusinessCardData | undefined
@@ -134,15 +134,21 @@ export default function Home() {
     setFiles(droppedFiles);
     setIsImageParsed(false);
 
-    if (droppedFiles.length > 0) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        if (typeof e.target?.result === "string") {
-          setFilePreview(e.target?.result);
-        }
-      };
-      reader.readAsDataURL(droppedFiles[0]);
-    }
+    droppedFiles.forEach((file, index) => {
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          if (typeof e.target?.result === "string") {
+            setFilePreviews((prev) => {
+              const newPreviews = [...prev];
+              newPreviews[index] = e.target?.result as string;
+              return newPreviews;
+            });
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+    });
   };
 
   const handleUploadAndParse = async () => {
@@ -169,7 +175,9 @@ export default function Home() {
       // console.log("Mock AI processing completed:", businessCardData);
 
       const formData = new FormData();
-      formData.append("image", files[0]);
+      files.forEach((file) => {
+        if (file) formData.append("image", file);
+      });
 
       const ocrResponse = await fetch("/api/ocr", {
         method: "POST",
@@ -254,7 +262,7 @@ export default function Home() {
         currentStep={currentStep}
         handleNextClick={handleNextClick}
         files={files}
-        filePreview={filePreview}
+        filePreviews={filePreviews}
         isImageParsed={isImageParsed}
         isProcessing={isProcessing}
         extractedData={extractedData}

@@ -56,6 +56,7 @@ const ImageUploader = ({
     galleryRef: React.RefObject<HTMLInputElement>
   ) => (
     <div className="flex-1">
+      {/* hidden inputs for camera/gallery */}
       <input
         type="file"
         accept="image/*"
@@ -113,27 +114,42 @@ const ImageUploader = ({
             {/* Mobile: Buttons */}
             {isMobile && (
               <div className="flex flex-row mt-4 gap-3 w-full px-6">
-                <button
-                  type="button"
-                  className="w-full py-2 px-2 rounded-lg bg-blue-800 text-white font-semibold"
+                {/* Use non-button interactive elements to avoid nested <button> */}
+                <div
+                  role="button"
+                  tabIndex={0}
+                  className="w-full py-2 px-2 rounded-lg bg-blue-800 text-white font-semibold flex items-center justify-center cursor-pointer"
                   onClick={(e) => {
                     e.stopPropagation();
                     cameraRef.current?.click();
                   }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      cameraRef.current?.click();
+                    }
+                  }}
                 >
                   Take Photo
-                </button>
+                </div>
 
-                <button
-                  type="button"
-                  className="w-full py-2 px-2 rounded-lg bg-white text-black font-semibold border border-gray-300"
+                <div
+                  role="button"
+                  tabIndex={0}
+                  className="w-full py-2 px-2 rounded-lg bg-white text-black font-semibold border border-gray-300 flex items-center justify-center cursor-pointer"
                   onClick={(e) => {
                     e.stopPropagation();
                     galleryRef.current?.click();
                   }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      galleryRef.current?.click();
+                    }
+                  }}
                 >
                   Open Gallery
-                </button>
+                </div>
               </div>
             )}
           </div>

@@ -82,52 +82,59 @@ const ImageUploader = ({
         {...(isMobile ? { noClick: true } : {})}
         onDrop={onDrop}
         onError={console.error}
-        src={files}
+        src={files?.length ? files : undefined}
         className="py-12 bg-white rounded-xl flex flex-col justify-center items-center gap-2.5 overflow-hidden border-dashed border-2 border-zinc-300"
       >
         <DropzoneEmptyState>
           <div className="flex flex-col items-center justify-center">
-            {!isMobile ? (
-              <div className="text-center">
+            {/* Desktop: Text */}
+            {!isMobile && (
+              <div className="w-full">
                 <span className="font-bold">Drop an image</span> or{" "}
                 <span
-                  className="font-bold cursor-pointer"
+                  className="font-bold text-blue-600 underline cursor-pointer"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    galleryRef.current?.click(); // desktop picker
+                  }}
+                >
+                  click to upload
+                </span>
+              </div>
+            )}
+
+            {/* Mobile: Text */}
+            {isMobile && (
+              <div className="w-full">
+                <span className="font-bold">Pick an image</span>
+              </div>
+            )}
+
+            {/* Mobile: Buttons */}
+            {isMobile && (
+              <div className="flex flex-row mt-4 gap-3 w-full px-6">
+                <button
+                  type="button"
+                  className="w-full py-2 px-2 rounded-lg bg-blue-800 text-white font-semibold"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    cameraRef.current?.click();
+                  }}
+                >
+                  Take Photo
+                </button>
+
+                <button
+                  type="button"
+                  className="w-full py-2 px-2 rounded-lg bg-white text-black font-semibold border border-gray-300"
                   onClick={(e) => {
                     e.stopPropagation();
                     galleryRef.current?.click();
                   }}
                 >
-                  Tap to choose
-                </span>
+                  Open Gallery
+                </button>
               </div>
-            ) : (
-              <>
-                <div className="text-center mb-4">
-                  <span className="font-bold">Pick an image</span>
-                </div>
-                <div className="flex flex-row gap-3 w-full px-6">
-                  <button
-                    type="button"
-                    className="w-full py-2 px-2 rounded-lg bg-blue-800 text-white font-semibold"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      cameraRef.current?.click();
-                    }}
-                  >
-                    Take Photo
-                  </button>
-                  <button
-                    type="button"
-                    className="w-full py-2 px-2 rounded-lg bg-white text-black font-semibold border border-gray-300"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      galleryRef.current?.click();
-                    }}
-                  >
-                    Open Gallery
-                  </button>
-                </div>
-              </>
             )}
           </div>
         </DropzoneEmptyState>
@@ -213,9 +220,7 @@ const ImageUploader = ({
         title={isProcessing ? "Processing..." : "Upload & Parse"}
         onClick={onUploadAndParse}
         className={
-          hasFiles && !isProcessing
-            ? ""
-            : "bg-zinc-500/50 cursor-not-allowed"
+          hasFiles && !isProcessing ? "" : "bg-zinc-500/50 cursor-not-allowed"
         }
         disabled={!hasFiles || isProcessing}
       />

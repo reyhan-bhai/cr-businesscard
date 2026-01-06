@@ -63,14 +63,34 @@ const ImageUploader = ({
         capture="environment"
         ref={cameraRef}
         className="hidden"
-        onChange={(e) => e.target.files && onDrop([...e.target.files])}
+        onChange={(e) => {
+          if (e.target.files && e.target.files.length > 0) {
+            const file = e.target.files[0];
+            console.log(
+              `📷 Camera capture (${side}):`,
+              file.name,
+              `${(file.size / 1024).toFixed(2)}KB`
+            );
+            onDrop([...e.target.files]);
+          }
+        }}
       />
       <input
         type="file"
         accept="image/*"
         ref={galleryRef}
         className="hidden"
-        onChange={(e) => e.target.files && onDrop([...e.target.files])}
+        onChange={(e) => {
+          if (e.target.files && e.target.files.length > 0) {
+            const file = e.target.files[0];
+            console.log(
+              `🖼️ Gallery pick (${side}):`,
+              file.name,
+              `${(file.size / 1024).toFixed(2)}KB`
+            );
+            onDrop([...e.target.files]);
+          }
+        }}
       />
 
       <div className="mb-2">

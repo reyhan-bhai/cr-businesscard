@@ -244,7 +244,7 @@ export default function Home() {
       setIsImageParsed(true);
     } catch (error) {
       console.error("Error processing business card:", error);
-      alert("Failed to process business card. Please try again.");
+      alert("Failed to process business card. Please try again." + error);
     } finally {
       setIsProcessing(false);
     }

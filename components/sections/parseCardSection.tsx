@@ -53,8 +53,8 @@ const ParseCardSection = ({
       className={`${currentStep === 1 ? "" : "hidden"} parse-card-page w-full`}
     >
       <ImageUploader
-        frontFiles={files && files[0] ? [files[0]] : []}
-        backFiles={files && files[1] ? [files[1]] : []}
+        frontFiles={files && files[0] ? [files[0]] : undefined}
+        backFiles={files && files[1] ? [files[1]] : undefined}
         frontPreview={filePreviews[0]}
         backPreview={filePreviews[1]}
         onFrontDrop={(droppedFiles) => {

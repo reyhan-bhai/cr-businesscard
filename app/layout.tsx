@@ -9,8 +9,8 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Business Card Parser",
-  description: "Extract identity information from business card images",
+  title: "Business Card Scanner",
+  description: "Scan and upload your business cards",
 };
 
 export default function RootLayout({

@@ -39,7 +39,10 @@ export class OCRService {
       this.client = new ImageAnnotatorClient({
         credentials: {
           client_email: process.env.OCR_GOOGLE_CLIENT_EMAIL,
-          private_key: process.env.OCR_GOOGLE_PRIVATE_KEY,
+          private_key: process.env.OCR_GOOGLE_PRIVATE_KEY?.replace(
+            /\\n/g,
+            "\n"
+          ).trim(),
         },
       });
 
@@ -61,7 +64,7 @@ export class OCRService {
       // Perform text detection on the image buffer
       const [result] = await this.client.textDetection({
         image: {
-          content: imageBuffer,
+          content: imageBuffer.toString("base64"),
         },
       });
 

@@ -6,7 +6,7 @@ const GOOGLE_DRIVE_ID = '1u78_XAv-GJ3wSQR2nj29uFT7dRV9L2V7';
 // Initialize JWT client
 const jwtClient = new JWT({
   email: process.env.GOOGLE_DRIVE_CLIENT_EMAIL,
-  key: process.env.GOOGLE_DRIVE_PRIVATE_KEY,
+  key: process.env.GOOGLE_DRIVE__PRIVATE_KEY?.replace(/\\n/g, "\n").trim(),
   scopes: ["https://www.googleapis.com/auth/drive"],
 });
 

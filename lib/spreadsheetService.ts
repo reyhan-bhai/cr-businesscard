@@ -4,7 +4,7 @@ import { google } from "googleapis";
 export async function getSheetData() {
   const glAuth = await google.auth.getClient({
     credentials: {
-      private_key: process.env.GOOGLE_PRIVATE_KEY,
+      private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, "\n").trim(),
       client_email: process.env.GOOGLE_SPREADSHEET_CLIENT_EMAIL,
     },
     scopes: ["https://www.googleapis.com/auth/spreadsheets"],
@@ -22,7 +22,7 @@ export async function getSheetData() {
 export async function checkIfEmailExists(email: string) {
   const glAuth = await google.auth.getClient({
     credentials: {
-      private_key: process.env.GOOGLE_SPREADSHEET_PRIVATE_KEY,
+      private_key: process.env.GOOGLE_SPREADSHEET_PRIVATE_KEY?.replace(/\\n/g, "\n").trim(),
       client_email: process.env.GOOGLE_SPREADSHEET_CLIENT_EMAIL,
     },
     scopes: ["https://www.googleapis.com/auth/spreadsheets"],
@@ -64,7 +64,7 @@ export async function checkIfEmailExists(email: string) {
 export async function appendToSheet(values: string[]) {
   const glAuth = await google.auth.getClient({
     credentials: {
-      private_key: process.env.GOOGLE_SPREADSHEET_PRIVATE_KEY,
+      private_key: process.env.GOOGLE_SPREADSHEET_PRIVATE_KEY?.replace(/\\n/g, "\n").trim(),
       client_email: process.env.GOOGLE_SPREADSHEET_CLIENT_EMAIL,
     },
     scopes: ["https://www.googleapis.com/auth/spreadsheets"],

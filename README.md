@@ -33,7 +33,7 @@ Before you begin, ensure you have:
 1. Clone the repository:
 ```bash
 git clone <repository-url>
-cd cr-businesscard-nd
+cd cr-businesscard
 ```
 
 2. Install dependencies:
@@ -219,7 +219,7 @@ gcloud app versions list
 ## Project Structure
 
 ```
-cr-businesscard-nd/
+cr-businesscard/
 ├── app/                    # Next.js app directory
 │   ├── api/               # API routes (OCR, save-card)
 │   └── page.tsx           # Main page component

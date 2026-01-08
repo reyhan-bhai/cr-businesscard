@@ -1,4 +1,0 @@
-docker build -f Dockerfile.local -t cr-businesscard-local .
-docker run --env-file .env -p 8080:8080 cr-businesscard-local
-docker build -f Dockerfile.cloudRun -t cr-businesscard-cr .
-docker run --env-file .env -p 8080:8080 cr-businesscard-cr

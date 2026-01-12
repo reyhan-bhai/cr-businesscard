@@ -95,7 +95,7 @@ const ImageUploader = ({
 
       <div className="mb-2">
         <span className="font-semibold text-sm text-gray-700 capitalize">
-          {side} Side
+          {side}
         </span>
       </div>
 

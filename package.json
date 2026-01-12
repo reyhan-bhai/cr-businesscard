@@ -3,13 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "cross-env NODE_OPTIONS=--openssl-legacy-provider next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "cross-env NODE_OPTIONS=--openssl-legacy-provider next start",
     "lint": "next lint"
   },
   "dependencies": {
-    "@google-cloud/vision": "^5.3.3",
+    "@google-cloud/vision": "^4.2.0",
     "@google/generative-ai": "^0.24.1",
     "@heroui/radio": "^2.3.26",
     "@radix-ui/react-label": "^2.1.7",
@@ -34,6 +34,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "cross-env": "^10.1.0",
     "eslint": "^8",
     "eslint-config-next": "14.2.32",
     "postcss": "^8",
